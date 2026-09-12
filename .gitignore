@@ -1,0 +1,45 @@
+# Dependências gerenciadas pelo Composer
+/vendor/
+/web/core/
+/web/modules/contrib/
+/web/themes/contrib/
+/web/profiles/contrib/
+/web/libraries/
+/recipes/
+/drush/Commands/contrib/
+
+# Arquivos de scaffold regenerados pelo composer install
+/web/.csslintrc
+/web/.eslintignore
+/web/.eslintrc.json
+/web/.ht.router.php
+/web/.htaccess
+/web/INSTALL.txt
+/web/README.md
+/web/example.gitignore
+/web/index.php
+/web/robots.txt
+/web/update.php
+/web/web.config
+/web/sites/default/default.settings.php
+/web/sites/default/default.services.yml
+/web/sites/development.services.yml
+/web/sites/example.settings.local.php
+/web/sites/example.sites.php
+/web/sites/README.txt
+/web/modules/README.txt
+/web/profiles/README.txt
+/web/themes/README.txt
+
+# Dados locais
+/web/sites/*/files/
+/web/sites/*/private/
+/web/sites/*/settings.local.php
+/web/sites/simpletest/
+
+# Diversos
+.DS_Store
+*.log
+.phpunit.result.cache
+/.lando.local.yml
+*.pdf
