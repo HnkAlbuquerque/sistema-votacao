@@ -1,0 +1,81 @@
+<?php
+
+/**
+ * @file
+ * Install, update and schema hooks for the Voting module.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_schema().
+ */
+function voting_schema(): array {
+  $schema['voting_vote'] = [
+    'description' => 'One row per vote. The unique key is what guarantees a single vote per user and question, even under concurrent requests.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Primary key.',
+      ],
+      'question_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The {voting_question}.id the vote belongs to.',
+      ],
+      'option_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The {voting_option}.id that was chosen.',
+      ],
+      'uid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The {users}.uid of the voter.',
+      ],
+      'created' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => 'Unix timestamp of the vote.',
+      ],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => [
+      'question_uid' => ['question_id', 'uid'],
+    ],
+    'indexes' => [
+      'question_option' => ['question_id', 'option_id'],
+      'uid' => ['uid'],
+    ],
+  ];
+
+  $schema['voting_result'] = [
+    'description' => 'Denormalized vote counters per option, incremented atomically on each vote so results never require a COUNT(*).',
+    'fields' => [
+      'question_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'option_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'votes' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['question_id', 'option_id'],
+  ];
+
+  return $schema;
+}

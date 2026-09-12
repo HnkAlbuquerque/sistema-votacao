@@ -1,0 +1,4 @@
+enabled: true
+flood:
+  limit: 20
+  window: 60

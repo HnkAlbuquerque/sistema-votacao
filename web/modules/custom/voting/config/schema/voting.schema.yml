@@ -1,0 +1,17 @@
+voting.settings:
+  type: config_object
+  label: 'Voting settings'
+  mapping:
+    enabled:
+      type: boolean
+      label: 'Voting enabled'
+    flood:
+      type: mapping
+      label: 'Rate limiting'
+      mapping:
+        limit:
+          type: integer
+          label: 'Maximum vote attempts per user inside the window'
+        window:
+          type: integer
+          label: 'Window length in seconds'

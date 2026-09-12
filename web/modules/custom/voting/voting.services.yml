@@ -1,0 +1,14 @@
+services:
+  logger.channel.voting:
+    parent: logger.channel_base
+    arguments: ['voting']
+
+  voting.settings:
+    class: Drupal\voting\VotingSettings
+    arguments: ['@config.factory']
+  Drupal\voting\VotingSettings: '@voting.settings'
+
+  voting.vote_repository:
+    class: Drupal\voting\Storage\VoteRepository
+    arguments: ['@database']
+  Drupal\voting\Storage\VoteRepositoryInterface: '@voting.vote_repository'

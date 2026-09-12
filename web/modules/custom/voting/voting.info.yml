@@ -1,0 +1,10 @@
+name: Voting
+type: module
+description: 'Simple voting system: questions with options, one vote per user, configurable result visibility.'
+package: Voting
+core_version_requirement: ^11
+dependencies:
+  - drupal:user
+  - drupal:file
+  - drupal:image
+configure: voting.settings
