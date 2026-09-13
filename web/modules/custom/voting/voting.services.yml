@@ -12,3 +12,27 @@ services:
     class: Drupal\voting\Storage\VoteRepository
     arguments: ['@database']
   Drupal\voting\Storage\VoteRepositoryInterface: '@voting.vote_repository'
+
+  voting.vote_manager:
+    class: Drupal\voting\Service\VoteManager
+    arguments:
+      - '@voting.vote_repository'
+      - '@voting.settings'
+      - '@entity_type.manager'
+      - '@flood'
+      - '@event_dispatcher'
+      - '@logger.channel.voting'
+      - '@datetime.time'
+  Drupal\voting\Service\VoteManagerInterface: '@voting.vote_manager'
+
+  voting.param_converter.question_identifier:
+    class: Drupal\voting\ParamConverter\QuestionIdentifierConverter
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: paramconverter }
+
+  voting.access_check.enabled:
+    class: Drupal\voting\Access\VotingEnabledAccessCheck
+    arguments: ['@voting.settings']
+    tags:
+      - { name: access_check, applies_to: _voting_enabled }

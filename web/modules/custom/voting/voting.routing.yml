@@ -44,3 +44,12 @@ entity.voting_option.delete_form:
     _entity_access: 'voting_option.delete'
   options:
     _admin_route: TRUE
+
+# Global settings (kill switch and rate limit).
+voting.settings:
+  path: '/admin/config/system/voting'
+  defaults:
+    _form: '\Drupal\voting\Form\SettingsForm'
+    _title: 'Voting settings'
+  requirements:
+    _permission: 'administer voting'

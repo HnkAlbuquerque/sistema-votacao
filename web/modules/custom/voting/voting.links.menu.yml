@@ -4,6 +4,11 @@ voting.admin:
   route_name: entity.voting_question.collection
   parent: system.admin_content
   weight: 10
+voting.settings:
+  title: 'Voting settings'
+  description: 'Enable or disable voting globally and tune the vote rate limit.'
+  route_name: voting.settings
+  parent: system.admin_config_system
 
 # Entry in the "content" menu, rendered by the Navigation sidebar under
 # "Content". The admin-menu link above keeps the classic /admin/content page

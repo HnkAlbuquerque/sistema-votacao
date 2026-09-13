@@ -5,3 +5,8 @@ administer voting:
 view voting questions:
   title: 'View voting questions'
   description: 'See active questions and their options, on the site and through the API.'
+view voting results:
+  title: 'View voting results regardless of question settings'
+  description: 'Bypasses the per-question "show results" setting and the "vote first" rule.'
+vote in voting questions:
+  title: 'Vote in voting questions'
