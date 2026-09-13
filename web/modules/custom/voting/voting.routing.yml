@@ -1,0 +1,46 @@
+# Administration of options, nested under the question.
+voting.question.options:
+  path: '/admin/content/voting/{voting_question}/options'
+  defaults:
+    _form: '\Drupal\voting\Form\OptionsOverviewForm'
+    _title_callback: '\Drupal\voting\Controller\OptionController::overviewTitle'
+  requirements:
+    _permission: 'administer voting'
+  options:
+    _admin_route: TRUE
+    parameters:
+      voting_question:
+        type: 'entity:voting_question'
+
+voting.option.add:
+  path: '/admin/content/voting/{voting_question}/options/add'
+  defaults:
+    _controller: '\Drupal\voting\Controller\OptionController::add'
+    _title_callback: '\Drupal\voting\Controller\OptionController::addTitle'
+  requirements:
+    _permission: 'administer voting'
+  options:
+    _admin_route: TRUE
+    parameters:
+      voting_question:
+        type: 'entity:voting_question'
+
+entity.voting_option.edit_form:
+  path: '/admin/content/voting/option/{voting_option}/edit'
+  defaults:
+    _entity_form: 'voting_option.edit'
+    _title_callback: '\Drupal\Core\Entity\Controller\EntityController::editTitle'
+  requirements:
+    _entity_access: 'voting_option.update'
+  options:
+    _admin_route: TRUE
+
+entity.voting_option.delete_form:
+  path: '/admin/content/voting/option/{voting_option}/delete'
+  defaults:
+    _entity_form: 'voting_option.delete'
+    _title_callback: '\Drupal\Core\Entity\Controller\EntityController::deleteTitle'
+  requirements:
+    _entity_access: 'voting_option.delete'
+  options:
+    _admin_route: TRUE

@@ -1,0 +1,7 @@
+administer voting:
+  title: 'Administer voting'
+  description: 'Create and edit questions and options, change global settings and inspect results.'
+  restrict access: true
+view voting questions:
+  title: 'View voting questions'
+  description: 'See active questions and their options, on the site and through the API.'

@@ -1,0 +1,16 @@
+voting.admin:
+  title: 'Voting'
+  description: 'Manage voting questions, their options and results.'
+  route_name: entity.voting_question.collection
+  parent: system.admin_content
+  weight: 10
+
+# Entry in the "content" menu, rendered by the Navigation sidebar under
+# "Content". The admin-menu link above keeps the classic /admin/content page
+# and the Toolbar working.
+voting.navigation:
+  title: 'Voting'
+  description: 'Manage voting questions, their options and results.'
+  route_name: entity.voting_question.collection
+  menu_name: content
+  weight: 10

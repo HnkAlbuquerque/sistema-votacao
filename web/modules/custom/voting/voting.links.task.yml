@@ -1,0 +1,22 @@
+entity.voting_question.edit_form:
+  route_name: entity.voting_question.edit_form
+  base_route: entity.voting_question.edit_form
+  title: 'Edit'
+  weight: 0
+voting.question.options:
+  route_name: voting.question.options
+  base_route: entity.voting_question.edit_form
+  title: 'Options'
+  weight: 1
+entity.voting_question.delete_form:
+  route_name: entity.voting_question.delete_form
+  base_route: entity.voting_question.edit_form
+  title: 'Delete'
+  weight: 10
+
+# Tabs on the questions list.
+entity.voting_question.collection:
+  route_name: entity.voting_question.collection
+  base_route: entity.voting_question.collection
+  title: 'Questions'
+  weight: 0
