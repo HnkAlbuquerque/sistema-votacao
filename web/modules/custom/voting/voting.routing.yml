@@ -1,3 +1,24 @@
+# Public pages.
+voting.questions:
+  path: '/votacao'
+  defaults:
+    _controller: '\Drupal\voting\Controller\QuestionPageController::list'
+    _title: 'Voting'
+  requirements:
+    _permission: 'view voting questions'
+
+voting.question:
+  path: '/votacao/{voting_question}'
+  defaults:
+    _controller: '\Drupal\voting\Controller\QuestionPageController::page'
+    _title_callback: '\Drupal\voting\Controller\QuestionPageController::title'
+  requirements:
+    _entity_access: 'voting_question.view'
+  options:
+    parameters:
+      voting_question:
+        type: 'voting_question:identifier'
+
 # Administration of options, nested under the question.
 voting.question.options:
   path: '/admin/content/voting/{voting_question}/options'
