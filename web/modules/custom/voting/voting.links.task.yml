@@ -8,6 +8,11 @@ voting.question.options:
   base_route: entity.voting_question.edit_form
   title: 'Options'
   weight: 1
+voting.question.results:
+  route_name: voting.question.results
+  base_route: entity.voting_question.edit_form
+  title: 'Results'
+  weight: 2
 entity.voting_question.delete_form:
   route_name: entity.voting_question.delete_form
   base_route: entity.voting_question.edit_form

@@ -66,6 +66,20 @@ entity.voting_option.delete_form:
   options:
     _admin_route: TRUE
 
+# Results and integrity check for administrators.
+voting.question.results:
+  path: '/admin/content/voting/{voting_question}/results'
+  defaults:
+    _controller: '\Drupal\voting\Controller\AdminResultsController::results'
+    _title_callback: '\Drupal\voting\Controller\AdminResultsController::title'
+  requirements:
+    _permission: 'administer voting'
+  options:
+    _admin_route: TRUE
+    parameters:
+      voting_question:
+        type: 'entity:voting_question'
+
 # Global settings (kill switch and rate limit).
 voting.settings:
   path: '/admin/config/system/voting'
