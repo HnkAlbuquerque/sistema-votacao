@@ -1,0 +1,8 @@
+name: Voting API
+type: module
+description: 'Hand-written JSON endpoints for external applications: list questions, show one, cast a vote and read results.'
+package: Voting
+core_version_requirement: ^11
+dependencies:
+  - voting:voting
+  - drupal:basic_auth

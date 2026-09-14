@@ -1,0 +1,9 @@
+services:
+  voting_api.serializer:
+    class: Drupal\voting_api\Serializer\QuestionSerializer
+
+  voting_api.exception_subscriber:
+    class: Drupal\voting_api\EventSubscriber\ApiExceptionSubscriber
+    arguments: ['@voting.settings', '@logger.channel.voting', '@current_user']
+    tags:
+      - { name: event_subscriber }

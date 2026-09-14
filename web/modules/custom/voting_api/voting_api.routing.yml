@@ -1,0 +1,70 @@
+# Every public endpoint carries `_voting_enabled` so the global kill switch
+# closes the whole external flow at once. `_auth` allows Basic Auth for
+# external clients and cookies for calls made from the site itself.
+
+voting_api.questions:
+  path: '/api/v1/questions'
+  defaults:
+    _controller: '\Drupal\voting_api\Controller\QuestionsController::list'
+  methods: [GET]
+  requirements:
+    _permission: 'view voting questions'
+    _voting_enabled: 'TRUE'
+  options:
+    _auth: ['basic_auth', 'cookie']
+
+voting_api.question:
+  path: '/api/v1/questions/{voting_question}'
+  defaults:
+    _controller: '\Drupal\voting_api\Controller\QuestionsController::show'
+  methods: [GET]
+  requirements:
+    _entity_access: 'voting_question.view'
+    _voting_enabled: 'TRUE'
+  options:
+    _auth: ['basic_auth', 'cookie']
+    parameters:
+      voting_question:
+        type: 'voting_question:identifier'
+
+voting_api.vote:
+  path: '/api/v1/questions/{voting_question}/vote'
+  defaults:
+    _controller: '\Drupal\voting_api\Controller\VoteController::vote'
+  methods: [POST]
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    _permission: 'vote in voting questions'
+    _entity_access: 'voting_question.view'
+    _voting_enabled: 'TRUE'
+    _csrf_request_header_check: 'TRUE'
+  options:
+    _auth: ['basic_auth', 'cookie']
+    parameters:
+      voting_question:
+        type: 'voting_question:identifier'
+
+voting_api.results:
+  path: '/api/v1/questions/{voting_question}/results'
+  defaults:
+    _controller: '\Drupal\voting_api\Controller\QuestionsController::results'
+  methods: [GET]
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    _entity_access: 'voting_question.view'
+    _voting_enabled: 'TRUE'
+  options:
+    _auth: ['basic_auth', 'cookie']
+    parameters:
+      voting_question:
+        type: 'voting_question:identifier'
+
+voting_api.health:
+  path: '/api/v1/health'
+  defaults:
+    _controller: '\Drupal\voting_api\Controller\HealthController::health'
+  methods: [GET]
+  requirements:
+    # Public on purpose: monitoring probes call it without credentials and it
+    # exposes nothing beyond "up/down" and the state of the switch.
+    _access: 'TRUE'
