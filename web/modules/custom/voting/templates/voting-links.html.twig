@@ -1,0 +1,80 @@
+{#
+/**
+ * @file
+ * Quick links page: every URL of the voting system in one place.
+ *
+ * Available variables:
+ * - sections: list of { title, links: [[label, url], ...] }.
+ * - questions: list of { title, identifier, active, links: [[label, url], ...] }.
+ * - question_limit: how many questions are listed at most.
+ * - all_questions_url: URL of the full question list.
+ * - accounts: list of [username, password, role].
+ * - commands: list of [command, description].
+ */
+#}
+<div class="voting-links">
+  {% for section in sections %}
+    <details open>
+      <summary><strong>{{ section.title }}</strong></summary>
+      <ul>
+        {% for link in section.links %}
+          <li>{{ link.0 }}: <a href="{{ link.1 }}">{{ link.1 }}</a></li>
+        {% endfor %}
+      </ul>
+    </details>
+  {% endfor %}
+
+  <details open>
+    <summary><strong>{{ 'Questions'|t }}</strong></summary>
+    <p>{{ 'Latest @limit questions. See <a href=":url">the full list</a> for the others.'|t({'@limit': question_limit, ':url': all_questions_url}) }}</p>
+    <table>
+      <thead>
+        <tr>
+          <th>{{ 'Title'|t }}</th>
+          <th>{{ 'Identifier'|t }}</th>
+          <th>{{ 'Status'|t }}</th>
+          <th>{{ 'Links'|t }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for question in questions %}
+          <tr>
+            <td>{{ question.title }}</td>
+            <td><code>{{ question.identifier }}</code></td>
+            <td>{{ question.active ? 'Active'|t : 'Inactive'|t }}</td>
+            <td>
+              {% for link in question.links %}
+                <a href="{{ link.1 }}">{{ link.0 }}</a>{{ not loop.last ? ' · ' }}
+              {% endfor %}
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="4">{{ 'No questions yet.'|t }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </details>
+
+  <details open>
+    <summary><strong>{{ 'Test accounts'|t }}</strong></summary>
+    <table>
+      <thead>
+        <tr><th>{{ 'User'|t }}</th><th>{{ 'Password'|t }}</th><th>{{ 'Role'|t }}</th></tr>
+      </thead>
+      <tbody>
+        {% for account in accounts %}
+          <tr><td><code>{{ account.0 }}</code></td><td><code>{{ account.1 }}</code></td><td>{{ account.2 }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </details>
+
+  <details open>
+    <summary><strong>{{ 'Commands'|t }}</strong></summary>
+    <ul>
+      {% for command in commands %}
+        <li><code>{{ command.0 }}</code> – {{ command.1 }}</li>
+      {% endfor %}
+    </ul>
+  </details>
+</div>

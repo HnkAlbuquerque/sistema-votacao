@@ -88,3 +88,14 @@ voting.settings:
     _title: 'Voting settings'
   requirements:
     _permission: 'administer voting'
+
+# Quick links page for administrators (all the URLs of the system in one place).
+voting.links:
+  path: '/admin/content/voting/links'
+  defaults:
+    _controller: '\Drupal\voting\Controller\LinksController::page'
+    _title: 'Quick links'
+  requirements:
+    _permission: 'administer voting'
+  options:
+    _admin_route: TRUE

@@ -25,3 +25,8 @@ entity.voting_question.collection:
   base_route: entity.voting_question.collection
   title: 'Questions'
   weight: 0
+voting.links:
+  route_name: voting.links
+  base_route: entity.voting_question.collection
+  title: 'Quick links'
+  weight: 1
