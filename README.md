@@ -20,7 +20,7 @@ Documentos complementares:
 ## Subindo o ambiente
 
 ```bash
-git clone <repositorio> votacao && cd votacao
+git clone git@github.com:HnkAlbuquerque/sistema-votacao.git votacao && cd votacao
 lando start
 lando composer install
 lando db-import db/dump.sql.gz
