@@ -60,6 +60,16 @@ final class VoteManager implements VoteManagerInterface {
     if (!$account->isAuthenticated()) {
       throw $this->reject(new AuthenticationRequiredException(), $context);
     }
+
+    // Rate limit every attempt, valid or not, so that malformed or repeated
+    // requests cannot be used to hammer the endpoint for free.
+    $uid = (int) $account->id();
+    $window = $this->settings->getFloodWindow();
+    if (!$this->flood->isAllowed(self::FLOOD_EVENT, $this->settings->getFloodLimit(), $window, (string) $uid)) {
+      throw $this->reject(new VoteRateLimitedException(), $context);
+    }
+    $this->flood->register(self::FLOOD_EVENT, $window, (string) $uid);
+
     if (!$question->isPublished()) {
       throw $this->reject(new QuestionInactiveException(), $context);
     }
@@ -70,18 +80,11 @@ final class VoteManager implements VoteManagerInterface {
     }
 
     $questionId = (int) $question->id();
-    $uid = (int) $account->id();
 
     // Cheap early exit; the unique key in the repository remains the guard.
     if ($this->repository->hasVoted($questionId, $uid)) {
       throw $this->reject(new AlreadyVotedException(), $context);
     }
-
-    $window = $this->settings->getFloodWindow();
-    if (!$this->flood->isAllowed(self::FLOOD_EVENT, $this->settings->getFloodLimit(), $window, (string) $uid)) {
-      throw $this->reject(new VoteRateLimitedException(), $context);
-    }
-    $this->flood->register(self::FLOOD_EVENT, $window, (string) $uid);
 
     try {
       $this->repository->recordVote($questionId, (int) $option->id(), $uid, $this->time->getRequestTime());

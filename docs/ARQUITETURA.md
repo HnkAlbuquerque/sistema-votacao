@@ -174,10 +174,10 @@ sessões por cookie, o header CSRF. Dentro do serviço, na ordem:
 |---|---|---|
 | 1. `voting.settings.enabled`? | `VotingDisabledException` | 403 `voting_disabled` |
 | 2. Conta autenticada? | `AuthenticationRequiredException` | 401 `authentication_required` |
-| 3. Pergunta ativa? | `QuestionInactiveException` | 403 `question_inactive` |
-| 4. `option_id` existe e pertence à pergunta? | `InvalidOptionException` | 422 `invalid_option` |
-| 5. Já votou? (`SELECT` indexado, saída barata) | `AlreadyVotedException` | 409 `already_voted` |
-| 6. `flood->isAllowed()` por uid, depois `flood->register()` | `VoteRateLimitedException` | 429 `rate_limited` |
+| 3. `flood->isAllowed()` por uid, depois `flood->register()`: toda tentativa conta, válida ou não | `VoteRateLimitedException` | 429 `rate_limited` |
+| 4. Pergunta ativa? | `QuestionInactiveException` | 403 `question_inactive` |
+| 5. `option_id` existe e pertence à pergunta? | `InvalidOptionException` | 422 `invalid_option` |
+| 6. Já votou? (`SELECT` indexado, saída barata) | `AlreadyVotedException` | 409 `already_voted` |
 | 7. `VoteRepository::recordVote()` em transação: `INSERT voting_vote`; `UPDATE voting_result SET votes = votes + 1`; se 0 linhas, `MERGE` cria a linha | violação do unique → rollback → `AlreadyVotedException` (corrida perdida, logada com `@race`) | 409 |
 | 8. `logger->info()` com `@question`, `@option`, `@uid` | | |
 | 9. `dispatch(VoteCastEvent)` | | |
@@ -188,7 +188,8 @@ Toda rejeição passa por `reject()`, que grava `notice` com o código do erro a
 Sem `SELECT ... FOR UPDATE`: o unique index serializa apenas pares (pergunta, usuário), que
 nunca colidem entre usuários diferentes; o `UPDATE ... + 1` é atômico no InnoDB e trava só a
 linha da opção. O passo 5 evita, no caso comum (duplo clique), pagar o insert falho e o rollback,
-mas a garantia real é o passo 7.
+mas a garantia real é o passo 7. O flood vem antes das validações de pergunta e opção de propósito: uma
+rajada de requisições malformadas custa o mesmo limite que votos válidos.
 
 ## 6. Visibilidade de resultados (`VoteManager::getResults()`)
 
@@ -284,7 +285,8 @@ apagar uma pergunta apaga opções, votos e contadores (log `notice`).
   (Basic Auth não tem sessão, então não é afetado).
 - Validação do body: JSON inválido → 400; `option_id` ausente ou não inteiro positivo → 400;
   opção de outra pergunta → 422.
-- Flood control por `uid` (`voting.cast_vote`, 20 tentativas / 60 s por padrão, ajustável no admin).
+- Flood control por `uid` (`voting.cast_vote`, 20 tentativas / 60 s por padrão, ajustável no admin), contando
+  toda tentativa de voto, inclusive as rejeitadas por opção inválida ou voto repetido.
 - Votos imutáveis: não há rota de update/delete de voto; contagens só agregadas, sem expor `uid` alheio.
 - Kill switch avaliado na rota (com cache tag da config) e de novo no serviço.
 - Identificador travado após a criação: clientes externos podem confiar na URL.
@@ -310,11 +312,12 @@ apagar uma pergunta apaga opções, votos e contadores (log `notice`).
   usado por nada do sistema. Temas: Olivero (site), Claro (admin).
 - Config exportada em `config/sync` (`lando drush cex`), dump em `db/dump.sql.gz`, Postman em
   `postman/` (collection com testes automáticos por request + environment local).
-- Testes (`lando phpunit`, 15 no total):
-  - Kernel `VoteManagerTest` (11): voto grava linha e contador; segundo voto rejeitado; unique key
+- Testes (`lando phpunit`, 16 no total):
+  - Kernel `VoteManagerTest` (12): voto grava linha e contador; segundo voto rejeitado; unique key
     segura mesmo sem o pré-check e mantém o contador; opção de outra pergunta; anônimo; pergunta
     inativa; kill switch bloqueia voto e resultado; resultado exige voto; resultado oculto continua
-    oculto para votante e visível para quem tem bypass; flood; cascata de exclusão.
+    oculto para votante e visível para quem tem bypass; flood limita votos válidos; flood conta
+    tentativas rejeitadas; cascata de exclusão.
   - Functional `VotingApiTest` (4): list/show/404/inativa; fluxo completo do voto (401, credencial
     errada, 400, 422, `vote_required`, 201, 409, results 200 com `no-store`); resultados ocultos;
     kill switch em todas as rotas menos health.
@@ -343,7 +346,6 @@ apagar uma pergunta apaga opções, votos e contadores (log `notice`).
 
 ## 14. Limitações conhecidas e próximos passos
 
-- Flood só conta tentativas que passam pelas validações anteriores (ver DECISOES §11).
 - Listagem de perguntas sem paginação: adequado para dezenas de perguntas, não para milhares.
 - `node` instalado pelo perfil `minimal` sem uso; candidato a desinstalação.
 - Autenticação por Basic Auth é adequada para o teste; em produção, `simple_oauth` ou API key por cliente.

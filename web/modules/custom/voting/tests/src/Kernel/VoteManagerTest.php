@@ -230,6 +230,29 @@ final class VoteManagerTest extends KernelTestBase {
   }
 
   /**
+   * Rejected attempts count towards the limit, not only successful votes.
+   *
+   * @covers ::castVote
+   */
+  public function testFloodControlCountsRejectedAttempts(): void {
+    $this->config('voting.settings')->set('flood.limit', 2)->save();
+    $user = $this->createVoter();
+
+    foreach ([1, 2] as $attempt) {
+      try {
+        $this->manager->castVote($this->question, 999999, $user);
+        $this->fail("Invalid option accepted on attempt $attempt.");
+      }
+      catch (InvalidOptionException) {
+        // Expected: the attempt is rejected but still counted.
+      }
+    }
+
+    $this->expectException(VoteRateLimitedException::class);
+    $this->manager->castVote($this->question, $this->optionIds[0], $user);
+  }
+
+  /**
    * Deleting a question or an option removes its votes and counters.
    */
   public function testDeletionCascades(): void {

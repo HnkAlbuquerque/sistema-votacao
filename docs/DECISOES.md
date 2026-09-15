@@ -155,9 +155,10 @@ A seção final lista perguntas que costumam aparecer em revisão, com a respost
 **Por quê:**
 - Um usuário só consegue votar uma vez por pergunta, mas pode varrer todas as perguntas em segundos ou disparar rajadas concorrentes. Flood control limita o custo sem infraestrutura extra.
 - É o mesmo mecanismo que o core usa no login, então revisores conhecem.
+- A checagem vem logo depois da autenticação, antes de validar pergunta e opção. Assim toda tentativa conta, inclusive as rejeitadas por opção inválida, pergunta inativa ou voto repetido. Sem isso, um usuário poderia martelar o endpoint com payload inválido sem nunca ser limitado, pagando só SELECTs e linhas de log.
 - O `register()` acontece antes do insert, então a tentativa conta mesmo que o insert falhe na corrida do unique index.
 
-**Limite conhecido:** o flood é verificado depois das validações de pergunta ativa, opção válida e "já votou". Tentativas rejeitadas nesses passos não contam. Elas custam um ou dois SELECTs indexados e são logadas, mas não são limitadas por taxa. Mover o flood para o início do fluxo é uma mudança de duas linhas se isso virar problema.
+**O que perderíamos com a ordem inversa:** mensagens mais específicas depois de estourar o limite. Com o flood primeiro, a 21ª tentativa em um minuto recebe 429 mesmo que a opção esteja errada. Cliente legítimo não erra 20 vezes por minuto, então o custo é aceitável. Testado em `testFloodControlCountsRejectedAttempts`.
 
 ---
 
