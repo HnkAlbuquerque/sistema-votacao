@@ -1,0 +1,139 @@
+{
+  "info": {
+    "name": "Voting API (Drupal 11)",
+    "description": "Endpoints externos do sistema de votação. Configure as variáveis base_url, username e password (ou use o environment que acompanha a collection). A pergunta é identificada pelo slug em question_id.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "basic",
+    "basic": [
+      { "key": "username", "value": "{{username}}", "type": "string" },
+      { "key": "password", "value": "{{password}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "base_url", "value": "https://votacao.lndo.site" },
+    { "key": "username", "value": "alice" },
+    { "key": "password", "value": "alice" },
+    { "key": "question_id", "value": "melhor-linguagem" },
+    { "key": "option_id", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "auth": { "type": "noauth" },
+        "method": "GET",
+        "url": { "raw": "{{base_url}}/api/v1/health", "host": ["{{base_url}}"], "path": ["api", "v1", "health"] }
+      },
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('200', () => pm.response.to.have.status(200));",
+        "pm.test('database ok', () => pm.expect(pm.response.json().data.database).to.eql('ok'));"
+      ] } }]
+    },
+    {
+      "name": "List questions",
+      "request": {
+        "auth": { "type": "noauth" },
+        "method": "GET",
+        "url": { "raw": "{{base_url}}/api/v1/questions", "host": ["{{base_url}}"], "path": ["api", "v1", "questions"] }
+      },
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('200', () => pm.response.to.have.status(200));",
+        "const body = pm.response.json();",
+        "pm.test('has data array', () => pm.expect(body.data).to.be.an('array'));",
+        "if (body.data.length) { pm.collectionVariables.set('question_id', body.data[0].id); }"
+      ] } }]
+    },
+    {
+      "name": "Get question",
+      "request": {
+        "auth": { "type": "noauth" },
+        "method": "GET",
+        "url": { "raw": "{{base_url}}/api/v1/questions/{{question_id}}", "host": ["{{base_url}}"], "path": ["api", "v1", "questions", "{{question_id}}"] }
+      },
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('200', () => pm.response.to.have.status(200));",
+        "const body = pm.response.json();",
+        "pm.test('has options', () => pm.expect(body.data.options).to.be.an('array'));",
+        "if (body.data.options.length) { pm.collectionVariables.set('option_id', body.data.options[0].id); }"
+      ] } }]
+    },
+    {
+      "name": "Vote (JSON body)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"option_id\": {{option_id}}\n}" },
+        "url": { "raw": "{{base_url}}/api/v1/questions/{{question_id}}/vote", "host": ["{{base_url}}"], "path": ["api", "v1", "questions", "{{question_id}}", "vote"] }
+      },
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('201 created or 409 already voted', () => pm.expect([201, 409]).to.include(pm.response.code));"
+      ] } }]
+    },
+    {
+      "name": "Vote (form-encoded body)",
+      "request": {
+        "method": "POST",
+        "body": { "mode": "urlencoded", "urlencoded": [{ "key": "option_id", "value": "{{option_id}}" }] },
+        "url": { "raw": "{{base_url}}/api/v1/questions/{{question_id}}/vote", "host": ["{{base_url}}"], "path": ["api", "v1", "questions", "{{question_id}}", "vote"] }
+      },
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('201 created or 409 already voted', () => pm.expect([201, 409]).to.include(pm.response.code));"
+      ] } }]
+    },
+    {
+      "name": "Results",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{base_url}}/api/v1/questions/{{question_id}}/results", "host": ["{{base_url}}"], "path": ["api", "v1", "questions", "{{question_id}}", "results"] }
+      },
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('200 visible or 403 hidden/vote_required', () => pm.expect([200, 403]).to.include(pm.response.code));"
+      ] } }]
+    },
+    {
+      "name": "Errors",
+      "item": [
+        {
+          "name": "Question not found (404)",
+          "request": { "auth": { "type": "noauth" }, "method": "GET",
+            "url": { "raw": "{{base_url}}/api/v1/questions/does-not-exist", "host": ["{{base_url}}"], "path": ["api", "v1", "questions", "does-not-exist"] } },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('404 not_found', () => { pm.response.to.have.status(404); pm.expect(pm.response.json().error.code).to.eql('not_found'); });"
+          ] } }]
+        },
+        {
+          "name": "Vote without credentials (401)",
+          "request": { "auth": { "type": "noauth" }, "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"option_id\": {{option_id}}}" },
+            "url": { "raw": "{{base_url}}/api/v1/questions/{{question_id}}/vote", "host": ["{{base_url}}"], "path": ["api", "v1", "questions", "{{question_id}}", "vote"] } },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('401 authentication_required', () => { pm.response.to.have.status(401); pm.expect(pm.response.json().error.code).to.eql('authentication_required'); });"
+          ] } }]
+        },
+        {
+          "name": "Invalid option (422)",
+          "request": { "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"option_id\": 999999}" },
+            "url": { "raw": "{{base_url}}/api/v1/questions/{{question_id}}/vote", "host": ["{{base_url}}"], "path": ["api", "v1", "questions", "{{question_id}}", "vote"] } },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('422 or 409', () => pm.expect([422, 409]).to.include(pm.response.code));"
+          ] } }]
+        },
+        {
+          "name": "Malformed body (400)",
+          "request": { "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{not json" },
+            "url": { "raw": "{{base_url}}/api/v1/questions/{{question_id}}/vote", "host": ["{{base_url}}"], "path": ["api", "v1", "questions", "{{question_id}}", "vote"] } },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('400 invalid_payload', () => { pm.response.to.have.status(400); pm.expect(pm.response.json().error.code).to.eql('invalid_payload'); });"
+          ] } }]
+        }
+      ]
+    }
+  ]
+}
