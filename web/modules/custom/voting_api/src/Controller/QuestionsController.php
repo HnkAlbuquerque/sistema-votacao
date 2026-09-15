@@ -97,7 +97,7 @@ final class QuestionsController extends ControllerBase {
     }
     $int = filter_var($value, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
     if ($int === FALSE) {
-      throw new BadRequestHttpException(sprintf('The "%s" parameter must be a positive integer.', $name));
+      throw new BadRequestHttpException((string) $this->t('The "@name" parameter must be a positive integer.', ['@name' => $name]));
     }
     return $int;
   }

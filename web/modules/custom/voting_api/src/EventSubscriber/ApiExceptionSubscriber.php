@@ -13,6 +13,7 @@ use Drupal\voting\Exception\VoteRateLimitedException;
 use Drupal\voting\Exception\VotingDisabledException;
 use Drupal\voting\Exception\VotingException;
 use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\voting\VotingSettings;
 use Drupal\voting_api\Response\ApiResponse;
 use Psr\Log\LoggerInterface;
@@ -30,6 +31,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * generic 500 without leaking internals.
  */
 final class ApiExceptionSubscriber implements EventSubscriberInterface {
+
+  use StringTranslationTrait;
 
   public const PATH_PREFIX = '/api/';
 
@@ -80,7 +83,7 @@ final class ApiExceptionSubscriber implements EventSubscriberInterface {
       || !$this->isApiRequest($event)) {
       return;
     }
-    $event->setResponse(ApiResponse::error('voting_disabled', 'Voting is currently disabled.', 403));
+    $event->setResponse(ApiResponse::error('voting_disabled', (string) $this->t('Voting is currently disabled.'), 403));
     $event->stopPropagation();
   }
 
@@ -111,27 +114,27 @@ final class ApiExceptionSubscriber implements EventSubscriberInterface {
       $status = $exception->getStatusCode();
       // Credentials were sent but did not authenticate anyone.
       if ($status === 403 && $this->currentUser->isAnonymous() && $event->getRequest()->headers->has('Authorization')) {
-        $event->setResponse(ApiResponse::error('invalid_credentials', 'The provided credentials are invalid.', 401));
+        $event->setResponse(ApiResponse::error('invalid_credentials', (string) $this->t('The provided credentials are invalid.'), 401));
         $event->stopPropagation();
         return;
       }
       [$code, $default] = match ($status) {
-        400 => ['invalid_payload', 'The request is malformed.'],
-        401 => ['authentication_required', 'Authentication is required.'],
+        400 => ['invalid_payload', $this->t('The request is malformed.')],
+        401 => ['authentication_required', $this->t('Authentication is required.')],
         403 => $this->settings->isEnabled()
-          ? ['access_denied', 'You are not allowed to perform this action.']
-          : ['voting_disabled', 'Voting is currently disabled.'],
-        404 => ['not_found', 'The requested resource does not exist.'],
-        405 => ['method_not_allowed', 'This method is not allowed on this resource.'],
-        default => ['http_error', 'The request could not be processed.'],
+          ? ['access_denied', $this->t('You are not allowed to perform this action.')]
+          : ['voting_disabled', $this->t('Voting is currently disabled.')],
+        404 => ['not_found', $this->t('The requested resource does not exist.')],
+        405 => ['method_not_allowed', $this->t('This method is not allowed on this resource.')],
+        default => ['http_error', $this->t('The request could not be processed.')],
       };
-      $message = $exception->getMessage() !== '' && $status < 500 ? $exception->getMessage() : $default;
+      $message = $exception->getMessage() !== '' && $status < 500 ? $exception->getMessage() : (string) $default;
       $response = ApiResponse::error($code, $message, $status);
       $response->headers->add($exception->getHeaders());
     }
     else {
       $this->logger->error('Unhandled API exception: @message', ['@message' => $exception->getMessage()]);
-      $response = ApiResponse::error('server_error', 'An unexpected error occurred.', 500);
+      $response = ApiResponse::error('server_error', (string) $this->t('An unexpected error occurred.'), 500);
     }
 
     $event->setResponse($response);

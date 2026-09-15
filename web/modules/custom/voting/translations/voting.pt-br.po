@@ -1,0 +1,402 @@
+# Brazilian Portuguese translation of the Voting module.
+# Imported by the locale module through the "interface translation server
+# pattern" declared in voting.info.yml (drush locale:update).
+msgid ""
+msgstr ""
+"Project-Id-Version: voting 1.0.0\n"
+"POT-Creation-Date: 2026-09-15 12:00-0300\n"
+"PO-Revision-Date: 2026-09-15 12:00-0300\n"
+"Language-Team: Portuguese (Brazil)\n"
+"Language: pt-br\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+# Module info.
+msgid "Voting"
+msgstr "Votação"
+
+msgid "Simple voting system: questions with options, one vote per user, configurable result visibility."
+msgstr "Sistema de votação simples: perguntas com opções, um voto por usuário, visibilidade dos resultados configurável."
+
+# Entity labels.
+msgid "Voting question"
+msgstr "Pergunta de votação"
+
+msgid "Voting questions"
+msgstr "Perguntas de votação"
+
+msgid "voting question"
+msgstr "pergunta de votação"
+
+msgid "voting questions"
+msgstr "perguntas de votação"
+
+msgid "@count voting question"
+msgid_plural "@count voting questions"
+msgstr[0] "@count pergunta de votação"
+msgstr[1] "@count perguntas de votação"
+
+msgid "Voting option"
+msgstr "Opção de votação"
+
+msgid "Voting options"
+msgstr "Opções de votação"
+
+msgid "voting option"
+msgstr "opção de votação"
+
+msgid "voting options"
+msgstr "opções de votação"
+
+msgid "@count voting option"
+msgid_plural "@count voting options"
+msgstr[0] "@count opção de votação"
+msgstr[1] "@count opções de votação"
+
+# Question fields.
+msgid "The question shown to users."
+msgstr "A pergunta exibida aos usuários."
+
+msgid "Identifier"
+msgstr "Identificador"
+
+msgid "Unique identifier used in URLs and in the API. Lowercase letters, numbers, hyphens and underscores only."
+msgstr "Identificador único usado nas URLs e na API. Apenas letras minúsculas, números, hífens e sublinhados."
+
+msgid "The identifier may only contain lowercase letters, numbers, hyphens and underscores."
+msgstr "O identificador só pode conter letras minúsculas, números, hífens e sublinhados."
+
+msgid "Optional context shown together with the question."
+msgstr "Contexto opcional exibido junto com a pergunta."
+
+msgid "Show results after voting"
+msgstr "Mostrar resultados após o voto"
+
+msgid "When enabled, users see the vote totals right after casting their vote. Otherwise they only get a confirmation."
+msgstr "Quando ativado, os usuários veem os totais logo após votar. Caso contrário, recebem apenas uma confirmação."
+
+msgid "Active"
+msgstr "Ativa"
+
+msgid "Only active questions are listed and accept votes."
+msgstr "Somente perguntas ativas são listadas e aceitam votos."
+
+msgid "Created"
+msgstr "Criada em"
+
+msgid "Changed"
+msgstr "Alterada em"
+
+# Option fields.
+msgid "Question"
+msgstr "Pergunta"
+
+msgid "A short explanation of this option."
+msgstr "Uma breve explicação desta opção."
+
+msgid "Options are shown in ascending weight order."
+msgstr "As opções são exibidas em ordem crescente de peso."
+
+# Permissions.
+msgid "Administer voting"
+msgstr "Administrar a votação"
+
+msgid "Create and edit questions and options, change global settings and inspect results."
+msgstr "Criar e editar perguntas e opções, alterar configurações globais e inspecionar resultados."
+
+msgid "View voting questions"
+msgstr "Ver perguntas de votação"
+
+msgid "See active questions and their options, on the site and through the API."
+msgstr "Ver perguntas ativas e suas opções, no site e pela API."
+
+msgid "View voting results regardless of question settings"
+msgstr "Ver resultados da votação independentemente da configuração da pergunta"
+
+msgid "Bypasses the per-question \"show results\" setting and the \"vote first\" rule."
+msgstr "Ignora a configuração \"mostrar resultados\" de cada pergunta e a regra \"vote primeiro\"."
+
+msgid "Vote in voting questions"
+msgstr "Votar nas perguntas de votação"
+
+# Menu, tabs and actions.
+msgid "Manage voting questions, their options and results."
+msgstr "Gerenciar perguntas de votação, suas opções e resultados."
+
+msgid "Voting settings"
+msgstr "Configurações da votação"
+
+msgid "Enable or disable voting globally and tune the vote rate limit."
+msgstr "Ativar ou desativar a votação globalmente e ajustar o limite de tentativas."
+
+msgid "Options"
+msgstr "Opções"
+
+msgid "Results"
+msgstr "Resultados"
+
+msgid "Questions"
+msgstr "Perguntas"
+
+msgid "Quick links"
+msgstr "Links rápidos"
+
+msgid "Add question"
+msgstr "Adicionar pergunta"
+
+msgid "Add option"
+msgstr "Adicionar opção"
+
+# Admin list.
+msgid "Inactive"
+msgstr "Inativa"
+
+msgid "Shown after vote"
+msgstr "Exibidos após o voto"
+
+msgid "Hidden"
+msgstr "Ocultos"
+
+msgid "Votes"
+msgstr "Votos"
+
+# Forms.
+msgid "Question %title created. Now add its answer options."
+msgstr "Pergunta %title criada. Agora adicione as opções de resposta."
+
+msgid "Question %title updated."
+msgstr "Pergunta %title atualizada."
+
+msgid "Option %title added."
+msgstr "Opção %title adicionada."
+
+msgid "Option %title updated."
+msgstr "Opção %title atualizada."
+
+msgid "Add option to %question"
+msgstr "Adicionar opção a %question"
+
+msgid "Options of %question"
+msgstr "Opções de %question"
+
+msgid "No options yet. Add at least two options so users can vote."
+msgstr "Ainda não há opções. Adicione pelo menos duas para que os usuários possam votar."
+
+msgid "Weight for @title"
+msgstr "Peso de @title"
+
+msgid "Save order"
+msgstr "Salvar ordem"
+
+msgid "The option order has been saved."
+msgstr "A ordem das opções foi salva."
+
+msgid "Votes already cast for this option will be removed as well. This action cannot be undone."
+msgstr "Os votos já registrados nesta opção também serão removidos. Esta ação não pode ser desfeita."
+
+msgid "Voting enabled"
+msgstr "Votação ativada"
+
+msgid "When unchecked, nobody can vote or read results, on the site or through the API. Administration keeps working."
+msgstr "Quando desmarcado, ninguém pode votar nem ler resultados, no site ou pela API. A administração continua funcionando."
+
+msgid "Rate limiting"
+msgstr "Limite de tentativas"
+
+msgid "Maximum vote attempts per user"
+msgstr "Máximo de tentativas de voto por usuário"
+
+msgid "Window (seconds)"
+msgstr "Janela (segundos)"
+
+msgid "Your answer"
+msgstr "Sua resposta"
+
+msgid "Vote"
+msgstr "Votar"
+
+msgid "Your vote has been recorded."
+msgstr "Seu voto foi registrado."
+
+# Results tab.
+msgid "Results of %question"
+msgstr "Resultados de %question"
+
+msgid "1 vote in total."
+msgid_plural "@count votes in total."
+msgstr[0] "1 voto no total."
+msgstr[1] "@count votos no total."
+
+msgid "Counters diverge from the raw votes. Run <code>drush voting:integrity --repair</code> to rebuild them."
+msgstr "Os contadores divergem dos votos brutos. Execute <code>drush voting:integrity --repair</code> para reconstruí-los."
+
+msgid "Option"
+msgstr "Opção"
+
+msgid "Votes (counter)"
+msgstr "Votos (contador)"
+
+msgid "Share"
+msgstr "Participação"
+
+msgid "Votes (raw rows)"
+msgstr "Votos (linhas brutas)"
+
+msgid "Integrity"
+msgstr "Integridade"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Mismatch"
+msgstr "Divergência"
+
+msgid "This question has no options."
+msgstr "Esta pergunta não tem opções."
+
+# Public pages.
+msgid "Voting is currently disabled."
+msgstr "A votação está desativada no momento."
+
+msgid "<a href=\":url\">Log in</a> to vote on this question."
+msgstr "<a href=\":url\">Entre</a> para votar nesta pergunta."
+
+msgid "Your account is not allowed to vote."
+msgstr "Sua conta não tem permissão para votar."
+
+msgid "Thank you, your vote has been recorded. The results of this question are not public."
+msgstr "Obrigado, seu voto foi registrado. Os resultados desta pergunta não são públicos."
+
+msgid "This question has no options yet."
+msgstr "Esta pergunta ainda não tem opções."
+
+msgid "There are no questions open for voting right now."
+msgstr "Não há perguntas abertas para votação no momento."
+
+msgid "@count options"
+msgstr "@count opções"
+
+msgid "Results shown after voting"
+msgstr "Resultados exibidos após o voto"
+
+msgid "Results hidden"
+msgstr "Resultados ocultos"
+
+msgid "All questions"
+msgstr "Todas as perguntas"
+
+msgid "Your vote"
+msgstr "Seu voto"
+
+msgid "@count votes in total"
+msgstr "@count votos no total"
+
+# Domain rules (shown in the form and in the API).
+msgid "You have already voted on this question."
+msgstr "Você já votou nesta pergunta."
+
+msgid "The selected option does not belong to this question."
+msgstr "A opção selecionada não pertence a esta pergunta."
+
+msgid "This question is not open for voting."
+msgstr "Esta pergunta não está aberta para votação."
+
+msgid "Too many vote attempts. Please try again later."
+msgstr "Muitas tentativas de voto. Tente novamente mais tarde."
+
+msgid "You need to be logged in to vote."
+msgstr "Você precisa estar autenticado para votar."
+
+msgid "Vote on this question to see the results."
+msgstr "Vote nesta pergunta para ver os resultados."
+
+msgid "The results of this question are not public."
+msgstr "Os resultados desta pergunta não são públicos."
+
+# Help.
+msgid "Questions with answer options that authenticated users vote on once. Results are shown according to each question. Manage questions under Content » Voting and the global switch under Configuration » System » Voting settings."
+msgstr "Perguntas com opções de resposta nas quais usuários autenticados votam uma única vez. Os resultados são exibidos conforme cada pergunta. Gerencie as perguntas em Conteúdo » Votação e a chave geral em Configuração » Sistema » Configurações da votação."
+
+# Quick links page.
+msgid "Administration"
+msgstr "Administração"
+
+msgid "Voting settings (kill switch, rate limit)"
+msgstr "Configurações da votação (chave geral, limite de tentativas)"
+
+msgid "Log messages (type: voting)"
+msgstr "Mensagens de log (tipo: voting)"
+
+msgid "Public pages"
+msgstr "Páginas públicas"
+
+msgid "Question list"
+msgstr "Lista de perguntas"
+
+msgid "API (5 routes, {id} is the question identifier)"
+msgstr "API (5 rotas, {id} é o identificador da pergunta)"
+
+msgid "GET health"
+msgstr "GET health"
+
+msgid "GET list questions"
+msgstr "GET listar perguntas"
+
+msgid "GET question"
+msgstr "GET pergunta"
+
+msgid "POST vote (needs auth, body option_id)"
+msgstr "POST votar (exige autenticação, body option_id)"
+
+msgid "GET results (needs auth)"
+msgstr "GET resultados (exige autenticação)"
+
+msgid "administrator"
+msgstr "administrador"
+
+msgid "regular user"
+msgstr "usuário comum"
+
+msgid "one-time admin login link"
+msgstr "link de login único do administrador"
+
+msgid "questions, options and votes"
+msgstr "perguntas, opções e votos"
+
+msgid "check and rebuild counters"
+msgstr "verificar e reconstruir os contadores"
+
+msgid "voting log"
+msgstr "log da votação"
+
+msgid "run the test suite"
+msgstr "executar a suíte de testes"
+
+msgid "Vote page"
+msgstr "Página de voto"
+
+msgid "API"
+msgstr "API"
+
+msgid "Latest @limit questions. See <a href=\":url\">the full list</a> for the others."
+msgstr "Últimas @limit perguntas. Veja <a href=\":url\">a lista completa</a> para as demais."
+
+msgid "Links"
+msgstr "Links"
+
+msgid "No questions yet."
+msgstr "Ainda não há perguntas."
+
+msgid "Test accounts"
+msgstr "Contas de teste"
+
+msgid "User"
+msgstr "Usuário"
+
+msgid "Role"
+msgstr "Papel"
+
+msgid "Commands"
+msgstr "Comandos"

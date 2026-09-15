@@ -3,6 +3,9 @@ type: module
 description: 'Simple voting system: questions with options, one vote per user, configurable result visibility.'
 package: Voting
 core_version_requirement: ^11
+version: 1.0.0
+'interface translation project': voting
+'interface translation server pattern': modules/custom/voting/translations/%project.%language.po
 dependencies:
   - drupal:user
   - drupal:file

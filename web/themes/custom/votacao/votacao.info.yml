@@ -3,6 +3,9 @@ type: theme
 description: 'Front-end theme of the voting system: design tokens, BEM components, automatic light and dark mode.'
 package: Voting
 core_version_requirement: ^11
+version: 1.0.0
+'interface translation project': votacao
+'interface translation server pattern': themes/custom/votacao/translations/%project.%language.po
 base theme: stable9
 logo: logo.svg
 libraries:

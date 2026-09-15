@@ -54,11 +54,11 @@ final class VoteController extends ControllerBase {
       $value = $request->getPayload()->get('option_id');
     }
     catch (\JsonException) {
-      throw new BadRequestHttpException('The request body is not valid JSON.');
+      throw new BadRequestHttpException((string) $this->t('The request body is not valid JSON.'));
     }
 
     if ($value === NULL || filter_var($value, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]) === FALSE) {
-      throw new BadRequestHttpException('A positive integer "option_id" is required.');
+      throw new BadRequestHttpException((string) $this->t('A positive integer "option_id" is required.'));
     }
 
     return (int) $value;

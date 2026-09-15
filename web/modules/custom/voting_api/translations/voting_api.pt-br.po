@@ -1,0 +1,51 @@
+# Brazilian Portuguese translation of the Voting API module.
+msgid ""
+msgstr ""
+"Project-Id-Version: voting_api 1.0.0\n"
+"POT-Creation-Date: 2026-09-15 12:00-0300\n"
+"PO-Revision-Date: 2026-09-15 12:00-0300\n"
+"Language-Team: Portuguese (Brazil)\n"
+"Language: pt-br\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Voting API"
+msgstr "API de Votação"
+
+msgid "Hand-written JSON endpoints for external applications: list questions, show one, cast a vote and read results."
+msgstr "Endpoints JSON escritos à mão para aplicações externas: listar perguntas, exibir uma, registrar voto e ler resultados."
+
+msgid "The request body is not valid JSON."
+msgstr "O corpo da requisição não é um JSON válido."
+
+msgid "A positive integer \"option_id\" is required."
+msgstr "É obrigatório um \"option_id\" inteiro positivo."
+
+msgid "The \"@name\" parameter must be a positive integer."
+msgstr "O parâmetro \"@name\" deve ser um inteiro positivo."
+
+msgid "The provided credentials are invalid."
+msgstr "As credenciais informadas são inválidas."
+
+msgid "The request is malformed."
+msgstr "A requisição está malformada."
+
+msgid "Authentication is required."
+msgstr "Autenticação obrigatória."
+
+msgid "You are not allowed to perform this action."
+msgstr "Você não tem permissão para executar esta ação."
+
+msgid "The requested resource does not exist."
+msgstr "O recurso solicitado não existe."
+
+msgid "This method is not allowed on this resource."
+msgstr "Este método não é permitido neste recurso."
+
+msgid "The request could not be processed."
+msgstr "A requisição não pôde ser processada."
+
+msgid "An unexpected error occurred."
+msgstr "Ocorreu um erro inesperado."

@@ -3,6 +3,9 @@ type: module
 description: 'Hand-written JSON endpoints for external applications: list questions, show one, cast a vote and read results.'
 package: Voting
 core_version_requirement: ^11
+version: 1.0.0
+'interface translation project': voting_api
+'interface translation server pattern': modules/custom/voting_api/translations/%project.%language.po
 dependencies:
   - voting:voting
   - drupal:basic_auth
