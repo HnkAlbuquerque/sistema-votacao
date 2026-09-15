@@ -6,6 +6,8 @@ namespace Drupal\voting\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Markup;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\voting\Entity\QuestionInterface;
 use Drupal\voting\Exception\VotingException;
 use Drupal\voting\Service\VoteManagerInterface;
@@ -13,18 +15,25 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * The public form used to cast a vote on a question.
+ *
+ * Each radio label is a full option card (image, title, description), so
+ * the user picks the card itself instead of a bare title.
  */
 final class VoteForm extends FormBase {
 
   public function __construct(
     private readonly VoteManagerInterface $voteManager,
+    private readonly RendererInterface $renderer,
   ) {}
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container): static {
-    return new static($container->get('voting.vote_manager'));
+    return new static(
+      $container->get('voting.vote_manager'),
+      $container->get('renderer'),
+    );
   }
 
   /**
@@ -44,21 +53,41 @@ final class VoteForm extends FormBase {
 
     $choices = [];
     foreach ($question->getOptions() as $id => $option) {
-      $choices[$id] = $option->getTitle();
+      $card = [
+        '#theme' => 'voting_option_card',
+        '#option' => $option,
+        '#inline' => TRUE,
+      ];
+      // The card is rendered in isolation because radio labels only accept
+      // strings; its output is template-escaped, so it is safe as markup.
+      $choices[$id] = Markup::create((string) $this->renderer->renderInIsolation($card));
     }
 
     if (!$choices) {
-      $form['empty'] = ['#markup' => $this->t('This question has no options yet.')];
+      $form['empty'] = [
+        '#theme' => 'voting_notice',
+        '#message' => $this->t('This question has no options yet.'),
+      ];
       return $form;
     }
 
-    $form['option_id'] = [
+    $form['#attributes']['class'][] = 'vote-form';
+    // A container carries the layout classes: attributes set on the radios
+    // element itself would be copied onto every <input>.
+    $form['options'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['vote-form__options']],
+    ];
+    $form['options']['option_id'] = [
       '#type' => 'radios',
       '#title' => $this->t('Your answer'),
       '#options' => $choices,
       '#required' => TRUE,
     ];
-    $form['actions'] = ['#type' => 'actions'];
+    $form['actions'] = [
+      '#type' => 'actions',
+      '#attributes' => ['class' => ['vote-form__actions']],
+    ];
     $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Vote'),

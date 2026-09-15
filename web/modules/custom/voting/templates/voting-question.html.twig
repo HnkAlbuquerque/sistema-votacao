@@ -1,0 +1,27 @@
+{#
+/**
+ * @file
+ * A single question: description, option cards and the outcome for the user.
+ *
+ * Available variables:
+ * - description: the question description, plain text.
+ * - options: list of option card render arrays (empty when the vote form
+ *   renders the options itself).
+ * - outcome: render array with the vote form, the results or a notice.
+ */
+#}
+<article class="question">
+  {% if description %}
+    <p class="question__description">{{ description|nl2br }}</p>
+  {% endif %}
+  {% if options %}
+    <div class="question__options option-grid">
+      {% for card in options %}
+        {{ card }}
+      {% endfor %}
+    </div>
+  {% endif %}
+  <div class="question__outcome">
+    {{ outcome }}
+  </div>
+</article>

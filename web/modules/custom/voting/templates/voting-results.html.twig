@@ -1,0 +1,29 @@
+{#
+/**
+ * @file
+ * Vote totals per option, as bars.
+ *
+ * Available variables:
+ * - rows: list of { title, votes, percentage, mine }.
+ * - total: total number of votes.
+ */
+#}
+<section class="results">
+  <h2 class="results__heading">{{ 'Results'|t }}</h2>
+  <ol class="results__rows">
+    {% for row in rows %}
+      <li class="results__row{{ row.mine ? ' results__row--mine' }}">
+        <span class="results__label">
+          {{ row.title }}
+          {% if row.mine %}<span class="badge badge--primary">{{ 'Your vote'|t }}</span>{% endif %}
+        </span>
+        <span class="results__bar" style="--results-share: {{ row.percentage }}%"><span class="results__fill"></span></span>
+        <span class="results__value">
+          <span class="results__votes">{{ row.votes }}</span>
+          <span class="results__percentage">{{ row.percentage }}%</span>
+        </span>
+      </li>
+    {% endfor %}
+  </ol>
+  <p class="results__total">{{ '@count votes in total'|t({'@count': total}) }}</p>
+</section>

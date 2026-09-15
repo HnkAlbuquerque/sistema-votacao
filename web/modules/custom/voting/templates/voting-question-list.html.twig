@@ -1,0 +1,37 @@
+{#
+/**
+ * @file
+ * List of questions open for voting.
+ *
+ * Available variables:
+ * - questions: list of { title, url, description, options_count, show_results }.
+ * - disabled: TRUE when voting is globally disabled.
+ */
+#}
+<div class="question-list">
+  {% if disabled %}
+    <p class="notice notice--warning">{{ 'Voting is currently disabled.'|t }}</p>
+  {% endif %}
+  {% if questions %}
+    <ul class="question-list__items">
+      {% for question in questions %}
+        <li class="question-list__item">
+          <a class="question-list__link" href="{{ question.url }}">
+            <span class="question-list__title">{{ question.title }}</span>
+            {% if question.description %}
+              <span class="question-list__description">{{ question.description }}</span>
+            {% endif %}
+            <span class="question-list__meta">
+              <span class="badge">{{ '@count options'|t({'@count': question.options_count}) }}</span>
+              <span class="badge {{ question.show_results ? 'badge--success' : 'badge--muted' }}">
+                {{ question.show_results ? 'Results shown after voting'|t : 'Results hidden'|t }}
+              </span>
+            </span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="question-list__empty">{{ 'There are no questions open for voting right now.'|t }}</p>
+  {% endif %}
+</div>

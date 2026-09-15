@@ -1,0 +1,30 @@
+{#
+/**
+ * @file
+ * One answer option: image, title and description.
+ *
+ * Available variables:
+ * - title: option title.
+ * - description: option description, plain text.
+ * - image: render array of the image, or NULL.
+ * - selected: TRUE when this is the option the current user voted for.
+ * - inline: TRUE when the card is rendered inside a form label, which only
+ *   allows phrasing content, so every wrapper becomes a span.
+ */
+#}
+{% set tag = inline ? 'span' : 'div' %}
+{% set classes = ['option-card', selected ? 'option-card--selected'] %}
+<{{ tag }} class="{{ classes|join(' ')|trim }}">
+  {% if image %}
+    <{{ tag }} class="option-card__media">{{ image }}</{{ tag }}>
+  {% endif %}
+  <{{ tag }} class="option-card__body">
+    <{{ tag }} class="option-card__title">{{ title }}</{{ tag }}>
+    {% if description %}
+      <{{ tag }} class="option-card__description">{{ description }}</{{ tag }}>
+    {% endif %}
+    {% if selected %}
+      <{{ tag }} class="option-card__badge badge badge--primary">{{ 'Your vote'|t }}</{{ tag }}>
+    {% endif %}
+  </{{ tag }}>
+</{{ tag }}>

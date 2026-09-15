@@ -12,6 +12,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\voting\Entity\OptionInterface;
 use Drupal\voting\Entity\QuestionInterface;
 use Drupal\voting\Storage\VoteRepositoryInterface;
+use Drupal\voting\Theme\VotingThemePreprocess;
 
 /**
  * Hook implementations for the Voting module.
@@ -43,6 +44,24 @@ final class VotingHooks {
   #[Hook('theme')]
   public function theme(): array {
     return [
+      // Public pages. The module owns the markup and the BEM class names;
+      // themes override the templates or just style the classes.
+      'voting_question_list' => [
+        'variables' => ['questions' => [], 'disabled' => FALSE],
+      ],
+      'voting_question' => [
+        'variables' => ['description' => '', 'options' => [], 'outcome' => []],
+      ],
+      'voting_option_card' => [
+        'variables' => ['option' => NULL, 'selected' => FALSE, 'inline' => FALSE],
+        'initial preprocess' => VotingThemePreprocess::class . ':preprocessOptionCard',
+      ],
+      'voting_results' => [
+        'variables' => ['rows' => [], 'total' => 0],
+      ],
+      'voting_notice' => [
+        'variables' => ['message' => '', 'type' => 'info'],
+      ],
       'voting_links' => [
         'variables' => [
           'sections' => [],
