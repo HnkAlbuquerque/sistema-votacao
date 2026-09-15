@@ -1,0 +1,6 @@
+_core:
+  default_config_hash: XQaZ08NJg6Nww1HQnpdNH5ENDNupjOB_wZ1Z_2GD9JA
+enabled: true
+flood:
+  limit: 20
+  window: 60

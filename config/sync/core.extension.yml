@@ -1,0 +1,33 @@
+_core:
+  default_config_hash: 4GIX5Esnc_umpXUBj4IIocRX7Mt5fPhm4AgXfE3E56E
+module:
+  basic_auth: 0
+  block: 0
+  breakpoint: 0
+  contextual: 0
+  dblog: 0
+  dynamic_page_cache: 0
+  field: 0
+  field_ui: 0
+  file: 0
+  filter: 0
+  image: 0
+  layout_builder: 0
+  layout_discovery: 0
+  mysql: 0
+  navigation: 0
+  node: 0
+  page_cache: 0
+  path_alias: 0
+  system: 0
+  text: 0
+  update: 0
+  user: 0
+  voting: 0
+  voting_api: 0
+  minimal: 1000
+theme:
+  stark: 0
+  claro: 0
+  olivero: 0
+profile: minimal

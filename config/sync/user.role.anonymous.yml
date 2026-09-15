@@ -1,0 +1,16 @@
+uuid: eb135c02-2a09-44c5-af24-6352d0edb151
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+    - voting
+_core:
+  default_config_hash: j5zLMOdJBqC0bMvSdth5UebkprJB8g_2FXHqhfpJzow
+id: anonymous
+label: 'Anonymous user'
+weight: 0
+is_admin: false
+permissions:
+  - 'access content'
+  - 'view voting questions'
