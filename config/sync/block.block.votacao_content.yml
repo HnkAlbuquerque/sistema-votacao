@@ -1,15 +1,15 @@
-uuid: 82ce1a52-4862-4ea1-97f4-227fda3a89b8
+uuid: 5ae2ebf5-0e45-442a-a1ec-5d8a5f0eaada
 langcode: en
 status: true
 dependencies:
   module:
     - system
   theme:
-    - olivero
+    - votacao
 _core:
   default_config_hash: erQSEZF2XUjNmgTl0uNRBzmg18ZGXwUcw2FhApoeuHk
-id: olivero_content
-theme: olivero
+id: votacao_content
+theme: votacao
 region: content
 weight: 0
 provider: null

@@ -1,25 +1,23 @@
-uuid: 54c9468f-2b78-44ef-998f-9f589e2dd2fe
+uuid: 8f1a46d7-c400-4baf-9c02-45105da2a6cf
 langcode: en
 status: true
 dependencies:
   module:
     - system
   theme:
-    - olivero
-_core:
-  default_config_hash: '-OAAZDw1OR_UyAEPEKX0Hu4LaZD149vW9PmMnIC-v0o'
-id: olivero_site_branding
-theme: olivero
+    - votacao
+id: votacao_branding
+theme: votacao
 region: header
 weight: 0
 provider: null
 plugin: system_branding_block
 settings:
   id: system_branding_block
-  label: 'Site branding'
+  label: votacao_branding
   label_display: '0'
   provider: system
   use_site_logo: true
   use_site_name: true
-  use_site_slogan: true
+  use_site_slogan: false
 visibility: {  }

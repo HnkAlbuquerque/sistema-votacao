@@ -1,15 +1,15 @@
-uuid: 8223f604-462a-4e76-b1a1-d24a9106267b
+uuid: 474da25e-e1b3-481b-b8f3-bd8ff7d7a395
 langcode: en
 status: true
 dependencies:
   theme:
-    - olivero
+    - votacao
 _core:
   default_config_hash: 6aOgWsNTXjqrDm98TXSAjP6qd2nCijD1xw45MrnbK-Y
-id: olivero_page_title
-theme: olivero
-region: content_above
-weight: -5
+id: votacao_page_title
+theme: votacao
+region: content
+weight: -10
 provider: null
 plugin: page_title_block
 settings:

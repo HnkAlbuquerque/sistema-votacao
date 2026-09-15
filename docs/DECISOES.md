@@ -267,6 +267,37 @@ A seção final lista perguntas que costumam aparecer em revisão, com a respost
 
 ---
 
+## 21. Markup no módulo, aparência no tema
+
+**Decidido:** as páginas públicas são montadas por theme hooks do módulo `voting` (`voting_question_list`, `voting_question`, `voting_option_card`, `voting_results`, `voting_notice`) com templates Twig que emitem as classes BEM. O tema só carrega CSS e sobrescreve templates de layout.
+
+**Alternativa:** render arrays genéricos (`item_list`, `html_tag`) no controller e todo o markup no tema.
+
+**Por quê:**
+- É a divisão de responsabilidades do Drupal: o módulo define a estrutura, o tema define a aparência. Qualquer tema, inclusive o Olivero, mostra o sistema funcional.
+- Com a classe definida uma vez na template do módulo, o SCSS do tema tem um contrato estável para estilizar. Trocar o tema não exige tocar em PHP.
+- O `initial preprocess` (API do Drupal 11.3) converte a entidade em variáveis simples antes da template, então template e tema nunca tocam o Entity API.
+- No formulário de voto, cada card é a label do radio: o usuário clica no card, não em um texto solto. A template usa `span` nesse caso porque `label` só aceita conteúdo de frase.
+
+---
+
+## 22. Tema próprio com design tokens, SCSS em BEM e build gulp
+
+**Decidido:** tema `votacao` com `base theme: stable9`, tokens em JSON gerando CSS custom properties, SCSS organizado por bloco BEM, gulp para compilar e CSS versionado.
+
+**Alternativas:** manter o Olivero; gerar pelo `starterkit_theme`; Tailwind; carregar fontes ou CSS de CDN.
+
+**Por quê:**
+- O PDF não avalia estilo, mas a demonstração fica mais convincente com uma interface coerente. A regra foi não deixar isso custar nada ao que é avaliado: sem contrib, sem JS de framework, sem requisição externa, e o CSS compilado entra no git para que `lando start` já mostre o tema sem Node.
+- `stable9` dá markup limpo e nenhum CSS de opinião; o `starterkit` copiaria dezenas de arquivos CSS que seriam apagados em seguida.
+- Tokens em JSON são a fonte única. O modelo semântico do shadcn/ui (`background`, `foreground`, `primary`, `muted`, `border`, `ring`, `radius`) resolve light e dark com as mesmas variáveis, e a paleta Zinc + Indigo dá identidade sem competir com o conteúdo. Trocar a cor primária é editar uma linha e rodar o build.
+- BEM deixa cada componente autocontido e legível: `.option-card__title`, `.results__row--mine`. Nenhum seletor depende da estrutura do DOM do Drupal além das classes que o próprio módulo emite.
+- Gulp é suficiente para o pipeline tokens → sass → autoprefixer. Sem bundler, sem JS.
+
+**O que perderíamos com Tailwind ou CDN:** dependência em runtime ou classes utilitárias espalhadas pelas templates do módulo, o que quebraria a separação da seção 21.
+
+---
+
 ## Perguntas que costumam aparecer
 
 - **"E se dois votos do mesmo usuário chegarem juntos?"** O segundo insert viola `UNIQUE (question_id, uid)`, a transação faz rollback e a API responde 409. Testado sem o pré-check em `testRepositoryRejectsDuplicateAndKeepsCounterConsistent`.
@@ -279,3 +310,4 @@ A seção final lista perguntas que costumam aparecer em revisão, com a respost
 - **"Onde estão as regras de negócio?"** Só em `VoteManager`. CMS e API são transportes. Seção 5.
 - **"Como sei que o sistema está saudável?"** `/api/v1/health`, log `voting`, aba Results, `drush voting:integrity`. Seção 12.
 - **"O que acontece ao desligar a votação?"** Access check em toda rota da API, aviso no CMS, cache invalidado pela tag da config, health continua respondendo. Seção 9.
+- **"O tema precisa de Node para rodar?"** Não. O CSS compilado está no repositório; Node só para quem alterar o SCSS. Seção 22.

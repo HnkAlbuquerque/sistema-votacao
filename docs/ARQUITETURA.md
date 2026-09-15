@@ -69,6 +69,10 @@ web/modules/custom/voting/
   config/install/voting.settings.yml   enabled: true, flood.limit: 20, flood.window: 60
   config/schema/voting.schema.yml
   templates/voting-links.html.twig     página Quick links
+  templates/voting-question-list.html.twig, voting-question.html.twig,
+            voting-option-card.html.twig, voting-results.html.twig, voting-notice.html.twig
+                                       páginas públicas: o módulo define o markup e as classes BEM
+  src/Theme/VotingThemePreprocess.php  preprocess do card (entidade → título, descrição, imagem)
   src/VotingSettings.php               acesso tipado à config (isEnabled, flood, cache tags)
   src/QuestionListBuilder.php          lista admin com identifier, status, resultados, votos e operações
   src/Entity/Question.php, QuestionInterface.php
@@ -108,6 +112,17 @@ web/modules/custom/voting_api/
   src/Response/ApiResponse.php             cacheable(), uncacheable(), error() – envelope único
   src/EventSubscriber/ApiExceptionSubscriber.php   exceções → JSON em /api/*
   tests/src/Functional/VotingApiTest.php   4 testes ponta a ponta com Basic Auth
+
+web/themes/custom/votacao/          tema do site público (base theme: stable9)
+  votacao.info.yml, votacao.libraries.yml, votacao.theme, logo.svg
+  tokens/design-tokens.json         fonte única: cores HSL light/dark, espaçamento, raio, tipografia, sombras, breakpoints
+  gulpfile.js, package.json         tokens → _tokens.generated.scss → sass → autoprefixer → css/main.css
+  scss/abstracts/                   _tokens.generated.scss (gerado), _mixins.scss (color(), space(), up()…)
+  scss/base/                        reset, tipografia
+  scss/layout/                      page, header, footer
+  scss/components/                  button, badge, card, notice, form, option-card, question, results, table
+  css/main.css                      build versionado; o site não depende de Node em runtime
+  templates/                        html, page, region, block de branding, menu de conta, abas locais
 ```
 
 ## 4. Modelo de dados
@@ -259,11 +274,16 @@ Cache:
 
 ## 9. CMS
 
-Público (tema Olivero):
+Público (tema `votacao`):
 
-- `/votacao` – lista de perguntas ativas (cache por `voting_question_list` + config).
+- `/votacao` – lista de perguntas ativas em cards, com badges de quantidade de opções e de
+  visibilidade dos resultados (cache por `voting_question_list` + config).
 - `/votacao/{slug}` – descrição, cards das opções (imagem em estilo `medium`) e o desfecho da
-  seção 6. Contexto de cache `user`; a tabela de resultados tem `max-age: 0`.
+  seção 6. No formulário, cada card é a label de um radio; após o voto, o card escolhido fica
+  destacado e os resultados aparecem como barras. Contexto de cache `user`; os resultados têm `max-age: 0`.
+- O markup e as classes BEM vêm das templates do módulo (`voting-*.html.twig`); o tema só
+  estiliza e pode sobrescrever qualquer template. Tokens de design em JSON geram as custom
+  properties de light e dark mode; o CSS compilado é versionado.
 
 Administração (tema Claro; link em Content » Voting no toolbar e na sidebar Navigation):
 
@@ -309,7 +329,8 @@ apagar uma pergunta apaga opções, votos e contadores (log `notice`).
   `dblog` (logs), `field_ui` (conveniência de admin), `navigation` (sidebar do Drupal 11, que puxa
   `block`, `layout_builder`, `layout_discovery`, `contextual`, `breakpoint`), e os que o perfil
   `minimal` instala: `node`, `block`, `dblog`, `page_cache`, `dynamic_page_cache`. `node` não é
-  usado por nada do sistema. Temas: Olivero (site), Claro (admin).
+  usado por nada do sistema. Temas: `votacao` (site, custom, base `stable9`), Claro (admin).
+- Serviço `node:20` no Lando com tooling `lando npm` e `lando gulp`, usado só para compilar o tema.
 - Config exportada em `config/sync` (`lando drush cex`), dump em `db/dump.sql.gz`, Postman em
   `postman/` (collection com testes automáticos por request + environment local).
 - Testes (`lando phpunit`, 16 no total):
@@ -321,7 +342,7 @@ apagar uma pergunta apaga opções, votos e contadores (log `notice`).
   - Functional `VotingApiTest` (4): list/show/404/inativa; fluxo completo do voto (401, credencial
     errada, 400, 422, `vote_required`, 201, 409, results 200 com `no-store`); resultados ocultos;
     kill switch em todas as rotas menos health.
-- `phpcs --standard=Drupal,DrupalPractice web/modules/custom` limpo.
+- `lando phpcs` (ruleset `phpcs.xml.dist`: Drupal + DrupalPractice em módulos e tema) limpo.
 
 ## 13. O que mudou entre o plano inicial e a implementação
 
@@ -343,6 +364,8 @@ apagar uma pergunta apaga opções, votos e contadores (log `notice`).
 | – | Premissa "resultado só para quem votou" (`vote_required`) | O PDF diz "após a votação"; sem isso qualquer usuário veria totais sem participar. |
 | – | Módulo `navigation` | Sidebar padrão do Drupal 11; o link Content » Voting aparece nela e no toolbar. |
 | `postman/voting.postman_collection.json` | `voting-api.postman_collection.json` + `voting-local.postman_environment.json` | Environment separado para `base_url` e credenciais. |
+| Render arrays genéricos (`item_list`, `html_tag`) nas páginas públicas | Theme hooks e templates Twig próprios no módulo | Sem template não há o que um tema estilizar; o módulo passa a ser dono do markup e das classes. |
+| Tema Olivero | Tema custom `votacao` com design tokens, SCSS em BEM e build gulp | Dar identidade visual ao sistema sem contrib e sem dependência em runtime. |
 
 ## 14. Limitações conhecidas e próximos passos
 

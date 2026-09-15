@@ -1,17 +1,17 @@
-uuid: 908ec398-0158-42b2-b489-dc3435bbbd22
+uuid: 4b843ece-c2b8-4591-9aca-2155aa1662b7
 langcode: en
 status: true
 dependencies:
   module:
     - system
   theme:
-    - olivero
+    - votacao
 _core:
   default_config_hash: BZ5tpW7H8X4PVGRm3MImTIHd2tN0eF7zOtp4SpRYUA0
-id: olivero_messages
-theme: olivero
+id: votacao_messages
+theme: votacao
 region: highlighted
-weight: -5
+weight: 0
 provider: null
 plugin: system_messages_block
 settings:

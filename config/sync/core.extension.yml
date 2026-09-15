@@ -29,5 +29,6 @@ module:
 theme:
   stark: 0
   claro: 0
-  olivero: 0
+  stable9: 0
+  votacao: 0
 profile: minimal

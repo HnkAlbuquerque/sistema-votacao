@@ -1,0 +1,20 @@
+uuid: 336c8a7e-3dfd-4f34-892a-db871ab17753
+langcode: en
+status: true
+dependencies:
+  theme:
+    - votacao
+id: votacao_local_tasks
+theme: votacao
+region: content
+weight: -20
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: votacao_local_tasks
+  label_display: '0'
+  provider: system
+  primary: true
+  secondary: true
+visibility: {  }
