@@ -1,0 +1,54 @@
+@use '../abstracts/mixins' as *;
+
+// Module notices (voting-notice.html.twig) and core status messages share
+// the same visual language.
+.notice,
+.messages {
+  @include surface;
+  box-shadow: none;
+  padding: space(3) space(4);
+  margin: 0;
+  font-size: font-size(sm);
+  border-left-width: 4px;
+}
+
+.notice {
+  &--info {
+    border-left-color: color(primary);
+  }
+
+  &--success {
+    border-left-color: color(success);
+    background: color(success-soft);
+  }
+
+  &--warning {
+    border-left-color: color(warning);
+    background: color(warning-soft);
+  }
+}
+
+.messages {
+  &--status {
+    border-left-color: color(success);
+    background: color(success-soft);
+  }
+
+  &--warning {
+    border-left-color: color(warning);
+    background: color(warning-soft);
+  }
+
+  &--error {
+    border-left-color: color(destructive);
+    background: color(destructive-soft);
+  }
+
+  + .messages {
+    margin-top: space(3);
+  }
+
+  ul {
+    padding-left: space(5);
+  }
+}

@@ -1,0 +1,19 @@
+@use '../abstracts/mixins' as *;
+
+.site-footer {
+  border-top: 1px solid color(border);
+  padding-block: space(6);
+  color: color(muted-foreground);
+  font-size: font-size(sm);
+
+  &__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: space(4);
+  }
+
+  &__note {
+    margin: 0;
+  }
+}

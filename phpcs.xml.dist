@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Coding standard for the custom code. Run inside Lando:
+     lando php vendor/bin/phpcs -->
+<ruleset name="votacao">
+  <description>Drupal and DrupalPractice standards for the custom modules and theme.</description>
+
+  <file>web/modules/custom</file>
+  <file>web/themes/custom</file>
+
+  <arg name="extensions" value="php,module,inc,install,theme,yml,twig"/>
+  <arg name="colors"/>
+  <arg value="p"/>
+
+  <!-- Front-end tooling and build output are not Drupal PHP/JS code. -->
+  <exclude-pattern>*/node_modules/*</exclude-pattern>
+  <exclude-pattern>*/css/*</exclude-pattern>
+  <exclude-pattern>*/gulpfile.js</exclude-pattern>
+
+  <rule ref="Drupal"/>
+  <rule ref="DrupalPractice"/>
+</ruleset>

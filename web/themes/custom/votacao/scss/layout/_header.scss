@@ -1,0 +1,95 @@
+@use '../abstracts/mixins' as *;
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid color(border);
+  background: color(background, 0.85);
+  backdrop-filter: saturate(180%) blur(8px);
+
+  &__inner {
+    min-height: var(--layout-header-height);
+  }
+
+  // Drupal wraps the header blocks in a region div; that is the flex row.
+  .region--header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: space(4);
+    min-height: var(--layout-header-height);
+  }
+}
+
+.brand {
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    gap: space(2);
+    color: color(foreground);
+    text-decoration: none;
+    font-weight: weight(semibold);
+    letter-spacing: -0.01em;
+  }
+
+  &__logo {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  &__slogan {
+    display: none;
+    color: color(muted-foreground);
+    font-size: font-size(sm);
+
+    @include up(md) {
+      display: inline;
+      margin-left: space(3);
+    }
+  }
+}
+
+.account-menu {
+  display: flex;
+  align-items: center;
+  gap: space(3);
+  font-size: font-size(sm);
+
+  &__user {
+    display: none;
+    color: color(muted-foreground);
+
+    @include up(sm) {
+      display: inline;
+    }
+  }
+
+  &__list {
+    display: flex;
+    gap: space(1);
+    list-style: none;
+  }
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    padding: space(2) space(3);
+    border-radius: radius(md);
+    color: color(foreground);
+    text-decoration: none;
+    font-weight: weight(medium);
+    @include transition(background-color, color);
+
+    &:hover {
+      background: color(accent);
+      color: color(accent-foreground);
+      text-decoration: none;
+    }
+
+    &.is-active,
+    .account-menu__item--active & {
+      background: color(accent);
+    }
+  }
+}

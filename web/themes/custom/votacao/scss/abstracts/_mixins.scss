@@ -1,0 +1,62 @@
+// Helpers that read the design tokens. Every component uses these instead of
+// raw values, so a change in tokens/design-tokens.json propagates everywhere.
+
+@use 'sass:map';
+@use 'tokens.generated' as t;
+
+/// A themed color: hsl(var(--color-name)) with optional alpha.
+@function color($name, $alpha: 1) {
+  @if $alpha == 1 {
+    @return hsl(var(--color-#{$name}));
+  }
+  @return hsl(var(--color-#{$name}) / #{$alpha});
+}
+
+@function space($step) {
+  @return var(--space-#{$step});
+}
+
+@function radius($size) {
+  @return var(--radius-#{$size});
+}
+
+@function font-size($size) {
+  @return var(--font-size-#{$size});
+}
+
+@function weight($name) {
+  @return var(--font-weight-#{$name});
+}
+
+@function shadow($size) {
+  @return var(--shadow-#{$size});
+}
+
+/// Mobile-first media query: @include up(md) { ... }
+@mixin up($breakpoint) {
+  @media (min-width: map.get(t.$breakpoints, $breakpoint)) {
+    @content;
+  }
+}
+
+/// Keyboard focus ring shared by every interactive element.
+@mixin focus-ring {
+  outline: 2px solid color(ring);
+  outline-offset: 2px;
+}
+
+/// Standard transition for hover and focus states.
+@mixin transition($properties...) {
+  transition-property: $properties;
+  transition-duration: var(--motion-normal);
+  transition-timing-function: var(--motion-ease);
+}
+
+/// Bordered surface used by cards, notices and tables.
+@mixin surface {
+  background: color(card);
+  color: color(card-foreground);
+  border: 1px solid color(border);
+  border-radius: radius(lg);
+  box-shadow: shadow(sm);
+}

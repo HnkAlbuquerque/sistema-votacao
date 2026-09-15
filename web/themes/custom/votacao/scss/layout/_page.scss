@@ -1,0 +1,38 @@
+@use '../abstracts/mixins' as *;
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  &__main {
+    flex: 1;
+    padding-block: space(8) space(12);
+  }
+
+  &__highlighted {
+    margin-bottom: space(6);
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: var(--layout-container);
+  margin-inline: auto;
+  padding-inline: space(4);
+
+  @include up(md) {
+    padding-inline: space(6);
+  }
+}
+
+.skip-link.focusable:focus {
+  position: absolute;
+  top: space(2);
+  left: space(2);
+  z-index: 100;
+  padding: space(2) space(3);
+  background: color(primary);
+  color: color(primary-foreground);
+  border-radius: radius(md);
+}

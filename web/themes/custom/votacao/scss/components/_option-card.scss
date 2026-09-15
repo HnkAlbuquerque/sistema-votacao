@@ -1,0 +1,154 @@
+@use '../abstracts/mixins' as *;
+
+// Answer option, rendered either as a plain card or inside a radio label.
+
+.option-grid {
+  display: grid;
+  gap: space(4);
+  grid-template-columns: 1fr;
+
+  @include up(sm) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.option-card {
+  @include surface;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  @include transition(border-color, box-shadow, transform);
+
+  &__media {
+    display: block;
+    aspect-ratio: 16 / 9;
+    background: color(muted);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: space(1);
+    padding: space(4);
+  }
+
+  &__title {
+    display: block;
+    font-weight: weight(semibold);
+    line-height: var(--font-leading-snug);
+  }
+
+  &__description {
+    display: block;
+    color: color(muted-foreground);
+    font-size: font-size(sm);
+  }
+
+  &__badge {
+    align-self: flex-start;
+    margin-top: space(2);
+  }
+
+  &--selected {
+    border-color: color(primary);
+    box-shadow: 0 0 0 3px color(ring, 0.25);
+  }
+}
+
+// Inside the vote form each card is the label of a hidden radio input.
+.vote-form {
+  &__options {
+    // The radios wrapper and every form-item become grid cells.
+    > .form-item,
+    .form-radios,
+    [id$='option-id'] {
+      display: grid;
+      gap: space(4);
+      grid-template-columns: 1fr;
+
+      @include up(sm) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .form-type-radio {
+      position: relative;
+      display: block;
+      margin: 0;
+    }
+
+    .form-radio {
+      position: absolute;
+      inset: space(4) auto auto space(4);
+      z-index: 1;
+      width: 1.25rem;
+      height: 1.25rem;
+      margin: 0;
+      opacity: 0;
+    }
+
+    label {
+      display: block;
+      height: 100%;
+      margin: 0;
+      cursor: pointer;
+      font-size: inherit;
+      font-weight: inherit;
+    }
+
+    .option-card {
+      position: relative;
+
+      // Without an image the indicator sits next to the title; with one it
+      // overlays the top-left corner of the picture.
+      &:not(:has(.option-card__media)) .option-card__body {
+        padding-left: space(12);
+      }
+
+      // Custom radio indicator drawn on the card.
+      &::before {
+        content: '';
+        position: absolute;
+        top: space(4);
+        left: space(4);
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid color(border);
+        border-radius: radius(full);
+        background: color(background);
+        @include transition(border-color, box-shadow);
+      }
+    }
+
+    label:hover .option-card {
+      border-color: color(primary, 0.5);
+      transform: translateY(-1px);
+      box-shadow: shadow(md);
+    }
+
+    .form-radio:checked + label .option-card {
+      border-color: color(primary);
+      box-shadow: 0 0 0 3px color(ring, 0.25);
+
+      &::before {
+        border-color: color(primary);
+        box-shadow: inset 0 0 0 4px color(primary);
+      }
+    }
+
+    .form-radio:focus-visible + label .option-card {
+      @include focus-ring;
+    }
+  }
+
+  &__actions {
+    margin-top: space(6);
+  }
+}

@@ -1,0 +1,11 @@
+{#
+/**
+ * @file
+ * Theme override for a region: adds a BEM class per region name.
+ */
+#}
+{% if content %}
+  <div{{ attributes.addClass(['region', 'region--' ~ region|clean_class]) }}>
+    {{ content }}
+  </div>
+{% endif %}

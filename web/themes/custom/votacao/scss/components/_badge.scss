@@ -1,0 +1,30 @@
+@use '../abstracts/mixins' as *;
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem space(2);
+  border-radius: radius(full);
+  border: 1px solid transparent;
+  background: color(muted);
+  color: color(muted-foreground);
+  font-size: font-size(xs);
+  font-weight: weight(medium);
+  line-height: var(--font-leading-normal);
+  white-space: nowrap;
+
+  &--muted {
+    background: transparent;
+    border-color: color(border);
+  }
+
+  &--primary {
+    background: color(primary-soft);
+    color: color(primary);
+  }
+
+  &--success {
+    background: color(success-soft);
+    color: color(success);
+  }
+}

@@ -1,0 +1,32 @@
+{#
+/**
+ * @file
+ * Theme override to display a single page.
+ *
+ * Regions: page.header, page.highlighted, page.content, page.footer.
+ */
+#}
+<div class="layout">
+  <header class="layout__header site-header" role="banner">
+    <div class="container site-header__inner">
+      {{ page.header }}
+    </div>
+  </header>
+
+  <main class="layout__main" role="main">
+    <a id="main-content" tabindex="-1"></a>
+    <div class="container">
+      {% if page.highlighted %}
+        <div class="layout__highlighted">{{ page.highlighted }}</div>
+      {% endif %}
+      <div class="layout__content">{{ page.content }}</div>
+    </div>
+  </main>
+
+  <footer class="layout__footer site-footer" role="contentinfo">
+    <div class="container site-footer__inner">
+      {{ page.footer }}
+      <p class="site-footer__note">{{ 'Simple voting system built with Drupal.'|t }}</p>
+    </div>
+  </footer>
+</div>

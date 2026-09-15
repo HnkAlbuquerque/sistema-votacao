@@ -1,0 +1,57 @@
+@use '../abstracts/mixins' as *;
+
+// Core prints submit inputs and links with .button; the primary one adds
+// .button--primary. The same look is reused by any element with .button.
+.button,
+button.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: space(2);
+  min-height: 2.5rem;
+  padding: space(2) space(4);
+  border: 1px solid color(border);
+  border-radius: radius(md);
+  background: color(background);
+  color: color(foreground);
+  font-size: font-size(sm);
+  font-weight: weight(medium);
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: shadow(sm);
+  @include transition(background-color, color, border-color, box-shadow);
+
+  &:hover {
+    background: color(accent);
+    color: color(accent-foreground);
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  &:disabled,
+  &.is-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &--primary {
+    background: color(primary);
+    border-color: color(primary);
+    color: color(primary-foreground);
+
+    &:hover {
+      background: color(primary, 0.9);
+      border-color: color(primary, 0.9);
+      color: color(primary-foreground);
+    }
+  }
+
+  &--danger {
+    background: color(destructive);
+    border-color: color(destructive);
+    color: color(destructive-foreground);
+  }
+}

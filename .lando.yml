@@ -6,8 +6,26 @@ config:
   composer_version: '2'
   database: mysql:8.0
   xdebug: false
+services:
+  node:
+    type: node:20
+    build:
+      - cd /app/web/themes/custom/votacao && npm ci --no-audit --no-fund
 tooling:
   phpunit:
     service: appserver
     cmd: vendor/bin/phpunit -c phpunit.xml
     description: Run PHPUnit tests
+  phpcs:
+    service: appserver
+    cmd: vendor/bin/phpcs
+    description: Check coding standards of the custom modules and theme
+  npm:
+    service: node
+    dir: /app/web/themes/custom/votacao
+    description: Run npm inside the theme directory
+  gulp:
+    service: node
+    cmd: npx gulp
+    dir: /app/web/themes/custom/votacao
+    description: Build the theme (gulp build | gulp watch | gulp tokens)

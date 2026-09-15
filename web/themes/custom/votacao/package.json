@@ -1,0 +1,21 @@
+{
+  "name": "votacao-theme",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Build pipeline of the Votação Drupal theme: design tokens to SCSS to CSS.",
+  "scripts": {
+    "build": "gulp build",
+    "watch": "gulp watch",
+    "tokens": "gulp tokens"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "gulp": "^5.0.0",
+    "gulp-postcss": "^10.0.0",
+    "gulp-sass": "^6.0.0",
+    "sass": "^1.80.0"
+  },
+  "browserslist": [
+    "defaults"
+  ]
+}

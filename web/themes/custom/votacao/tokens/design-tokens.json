@@ -1,0 +1,92 @@
+{
+  "$description": "Single source of truth for the theme. Colors are HSL triplets (hue saturation lightness) consumed as hsl(var(--color-x)), following the shadcn/ui token model. The gulp 'tokens' task turns this file into scss/abstracts/_tokens.generated.scss.",
+  "color": {
+    "background":             { "light": "0 0% 100%",     "dark": "240 10% 3.9%" },
+    "foreground":             { "light": "240 10% 3.9%",  "dark": "0 0% 98%" },
+    "card":                   { "light": "0 0% 100%",     "dark": "240 10% 5.9%" },
+    "card-foreground":        { "light": "240 10% 3.9%",  "dark": "0 0% 98%" },
+    "muted":                  { "light": "240 4.8% 95.9%","dark": "240 3.7% 15.9%" },
+    "muted-foreground":       { "light": "240 3.8% 46.1%","dark": "240 5% 64.9%" },
+    "accent":                 { "light": "240 4.8% 95.9%","dark": "240 3.7% 15.9%" },
+    "accent-foreground":      { "light": "240 5.9% 10%",  "dark": "0 0% 98%" },
+    "primary":                { "light": "243 75% 59%",   "dark": "234 89% 74%" },
+    "primary-foreground":     { "light": "0 0% 100%",     "dark": "240 10% 3.9%" },
+    "primary-soft":           { "light": "226 100% 97%",  "dark": "244 47% 20%" },
+    "success":                { "light": "160 84% 39%",   "dark": "158 64% 52%" },
+    "success-foreground":     { "light": "0 0% 100%",     "dark": "240 10% 3.9%" },
+    "success-soft":           { "light": "152 81% 96%",   "dark": "164 86% 16%" },
+    "warning":                { "light": "38 92% 50%",    "dark": "43 96% 56%" },
+    "warning-foreground":     { "light": "240 10% 3.9%",  "dark": "240 10% 3.9%" },
+    "warning-soft":           { "light": "48 100% 96%",   "dark": "32 81% 20%" },
+    "destructive":            { "light": "0 72% 51%",     "dark": "0 91% 71%" },
+    "destructive-foreground": { "light": "0 0% 100%",     "dark": "240 10% 3.9%" },
+    "destructive-soft":       { "light": "0 86% 97%",     "dark": "0 63% 20%" },
+    "border":                 { "light": "240 5.9% 90%",  "dark": "240 3.7% 15.9%" },
+    "input":                  { "light": "240 5.9% 90%",  "dark": "240 3.7% 15.9%" },
+    "ring":                   { "light": "243 75% 59%",   "dark": "234 89% 74%" }
+  },
+  "radius": {
+    "sm": "0.375rem",
+    "md": "0.5rem",
+    "lg": "0.75rem",
+    "xl": "1rem",
+    "full": "9999px"
+  },
+  "space": {
+    "1": "0.25rem",
+    "2": "0.5rem",
+    "3": "0.75rem",
+    "4": "1rem",
+    "5": "1.25rem",
+    "6": "1.5rem",
+    "8": "2rem",
+    "10": "2.5rem",
+    "12": "3rem",
+    "16": "4rem"
+  },
+  "font": {
+    "family": {
+      "sans": "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+      "mono": "ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace"
+    },
+    "size": {
+      "xs": "0.75rem",
+      "sm": "0.875rem",
+      "base": "1rem",
+      "lg": "1.125rem",
+      "xl": "1.25rem",
+      "2xl": "1.5rem",
+      "3xl": "1.875rem"
+    },
+    "weight": {
+      "normal": "400",
+      "medium": "500",
+      "semibold": "600",
+      "bold": "700"
+    },
+    "leading": {
+      "tight": "1.25",
+      "snug": "1.375",
+      "normal": "1.5"
+    }
+  },
+  "shadow": {
+    "sm": "0 1px 2px 0 hsl(240 10% 3.9% / 0.05)",
+    "md": "0 4px 6px -1px hsl(240 10% 3.9% / 0.08), 0 2px 4px -2px hsl(240 10% 3.9% / 0.06)",
+    "lg": "0 10px 15px -3px hsl(240 10% 3.9% / 0.1), 0 4px 6px -4px hsl(240 10% 3.9% / 0.06)"
+  },
+  "motion": {
+    "fast": "120ms",
+    "normal": "200ms",
+    "ease": "cubic-bezier(0.4, 0, 0.2, 1)"
+  },
+  "layout": {
+    "container": "64rem",
+    "header-height": "3.75rem"
+  },
+  "breakpoint": {
+    "sm": "640px",
+    "md": "768px",
+    "lg": "1024px"
+  }
+}

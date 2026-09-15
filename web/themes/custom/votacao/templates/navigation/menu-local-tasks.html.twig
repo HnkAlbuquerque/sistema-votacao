@@ -1,0 +1,14 @@
+{#
+/**
+ * @file
+ * Local tasks (e.g. "Log in" / "Reset your password") rendered as tabs.
+ */
+#}
+{% if primary %}
+  <h2 class="visually-hidden">{{ 'Primary tabs'|t }}</h2>
+  <ul class="tabs tabs--primary">{{ primary }}</ul>
+{% endif %}
+{% if secondary %}
+  <h2 class="visually-hidden">{{ 'Secondary tabs'|t }}</h2>
+  <ul class="tabs tabs--secondary">{{ secondary }}</ul>
+{% endif %}

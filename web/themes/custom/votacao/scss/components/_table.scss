@@ -1,0 +1,19 @@
+@use '../abstracts/mixins' as *;
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: font-size(sm);
+
+  th,
+  td {
+    padding: space(3);
+    text-align: left;
+    border-bottom: 1px solid color(border);
+  }
+
+  th {
+    color: color(muted-foreground);
+    font-weight: weight(medium);
+  }
+}

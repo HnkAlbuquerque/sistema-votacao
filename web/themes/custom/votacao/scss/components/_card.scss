@@ -1,0 +1,6 @@
+@use '../abstracts/mixins' as *;
+
+.card {
+  @include surface;
+  padding: space(6);
+}

@@ -1,0 +1,24 @@
+// Votação theme entry point.
+//
+// Order follows ITCSS: tokens and helpers first (no CSS output except the
+// :root custom properties), then base styles, layout and components. Every
+// component is a BEM block named after the class it styles.
+
+@use 'abstracts/tokens.generated';
+
+@use 'base/reset';
+@use 'base/typography';
+
+@use 'layout/page';
+@use 'layout/header';
+@use 'layout/footer';
+
+@use 'components/button';
+@use 'components/badge';
+@use 'components/card';
+@use 'components/notice';
+@use 'components/form';
+@use 'components/option-card';
+@use 'components/question';
+@use 'components/results';
+@use 'components/table';

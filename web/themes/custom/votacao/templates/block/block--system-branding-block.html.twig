@@ -1,0 +1,20 @@
+{#
+/**
+ * @file
+ * Site branding: logo and site name as one link to the front page.
+ */
+#}
+{% set classes = ['block', 'block--branding', 'brand'] %}
+<div{{ attributes.addClass(classes) }}>
+  <a class="brand__link" href="{{ path('<front>') }}" rel="home">
+    {% if site_logo %}
+      <img class="brand__logo" src="{{ site_logo }}" alt="" width="32" height="32" />
+    {% endif %}
+    {% if site_name %}
+      <span class="brand__name">{{ site_name }}</span>
+    {% endif %}
+  </a>
+  {% if site_slogan %}
+    <span class="brand__slogan">{{ site_slogan }}</span>
+  {% endif %}
+</div>

@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * Preprocess functions for the Votação theme.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_preprocess_HOOK() for html.html.twig.
+ *
+ * Adds a body class per route so pages can be styled without extra markup,
+ * e.g. "page--voting-question" or "page--user-login".
+ */
+function votacao_preprocess_html(array &$variables): void {
+  $route = \Drupal::routeMatch()->getRouteName() ?? '';
+  $variables['attributes']['class'][] = 'page';
+  $variables['attributes']['class'][] = 'page--' . str_replace(['.', '_'], '-', $route);
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for menu--account.html.twig.
+ *
+ * Exposes the current user name so the account menu can greet the user.
+ */
+function votacao_preprocess_menu__account(array &$variables): void {
+  $account = \Drupal::currentUser();
+  $variables['account_name'] = $account->isAuthenticated() ? $account->getDisplayName() : NULL;
+}
