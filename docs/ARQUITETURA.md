@@ -58,7 +58,8 @@ endpoint da API chamam exatamente o mesmo `VoteManager::castVote()`.
 
 ```
 web/modules/custom/voting/
-  voting.info.yml               depende de user, file, image
+  voting.info.yml               depende de user, file, image; declara o .po de tradução
+  translations/voting.pt-br.po  tradução pt-br de todas as strings do módulo
   voting.install                hook_schema: voting_vote, voting_result
   voting.permissions.yml        4 permissões (seção 7)
   voting.routing.yml            páginas públicas, aba Options, add/edit/delete de opção, aba Results, settings, Quick links
@@ -102,7 +103,8 @@ web/modules/custom/voting/
   tests/src/Kernel/VoteManagerTest.php    11 testes
 
 web/modules/custom/voting_api/
-  voting_api.info.yml           depende de voting e basic_auth
+  voting_api.info.yml           depende de voting e basic_auth; declara o .po de tradução
+  translations/voting_api.pt-br.po
   voting_api.routing.yml        5 rotas (seção 8)
   voting_api.services.yml       voting_api.serializer, voting_api.exception_subscriber
   src/Controller/QuestionsController.php   list(), show(), results()
@@ -123,6 +125,7 @@ web/themes/custom/votacao/          tema do site público (base theme: stable9)
   scss/components/                  button, badge, card, notice, form, option-card, question, results, table
   css/main.css                      build versionado; o site não depende de Node em runtime
   templates/                        html, page, region, block de branding, menu de conta, abas locais
+  translations/votacao.pt-br.po     tradução pt-br das strings do tema
 ```
 
 ## 4. Modelo de dados
@@ -334,6 +337,10 @@ apagar uma pergunta apaga opções, votos e contadores (log `notice`).
   `minimal` instala: `node`, `block`, `dblog`, `page_cache`, `dynamic_page_cache`. `node` não é
   usado por nada do sistema. Temas: `votacao` (site, custom, base `stable9`), Claro (admin).
 - Serviço `node:20` no Lando com tooling `lando npm` e `lando gulp`, usado só para compilar o tema.
+- Idioma: `language` + `locale` do core, `pt-br` padrão sem prefixo e `en` em `/en`
+  (`language.negotiation`, `system.site: default_langcode`). Core traduzido por localize.drupal.org;
+  módulos e tema próprios por `.po` em `translations/`, declarados no `info.yml`
+  (`interface translation project` + `server pattern`) e importados pelo `locale:update`.
 - Config exportada em `config/sync` (`lando drush cex`), dump em `db/dump.sql.gz`, Postman em
   `postman/` (collection com testes automáticos por request + environment local).
 - Testes (`lando phpunit`, 17 no total):

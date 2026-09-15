@@ -11,7 +11,7 @@ Documentos complementares:
 
 | Item | Versão |
 |---|---|
-| Drupal | 11.4 (perfil `minimal`, sem módulos contrib) |
+| Drupal | 11.4 (perfil `minimal`, sem módulos contrib, interface em pt-br) |
 | PHP | 8.3 |
 | MySQL | 8.0 |
 | Lando | 3.x |
@@ -51,6 +51,21 @@ lando drush site:install minimal --existing-config --account-pass=admin -y
 | ana, bruno, carla, diego, elena, fabio, gabriela, henrique, isabela, joao | igual ao nome de usuário | usuários comuns |
 
 O dump traz duas perguntas de exemplo com votos, `melhor-linguagem` (resultados visíveis) e `framework-favorito` (resultados ocultos), mais 100 perguntas de conhecimentos gerais com quatro alternativas cada, em dez temas (geografia, história, ciências, artes, esportes, matemática, tecnologia, literatura, cinema e música). Dessas, uma em cada dez oculta os totais e as três últimas estão inativas, para demonstrar cada estado.
+
+## Idioma
+
+O site é em português do Brasil (`pt-br`, idioma padrão, sem prefixo na URL); o inglês, idioma de origem das strings, fica em `/en`. A tradução segue o fluxo padrão do Drupal, com os módulos `language` e `locale` do core:
+
+- **Core e módulos do core**: traduções oficiais de localize.drupal.org, importadas pelo `locale` e guardadas no banco, então já vêm no dump.
+- **Módulos e tema próprios**: arquivos `.po` versionados em `translations/` de cada projeto (`voting`, `voting_api`, `votacao`), declarados no `info.yml` por `interface translation server pattern`. Toda string do código continua em inglês dentro de `t()`, `TranslatableMarkup` ou `|t`; o `.po` só fornece o português.
+
+Para atualizar ou reimportar tudo (core e projetos próprios):
+
+```bash
+lando drush locale:check && lando drush locale:update
+```
+
+As mensagens de erro da API também saem em português; o contrato para o cliente é o campo `code`, que não muda.
 
 ## Uso no CMS
 

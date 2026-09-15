@@ -174,12 +174,17 @@ A seção final lista perguntas que costumam aparecer em revisão, com a respost
 
 ---
 
-## 13. Strings em inglês com `t()`, docs em português
+## 13. Strings em inglês com `t()`, tradução por `.po`, docs em português
 
-**Decidido:** código e UI em inglês, documentação em português.
+**Decidido:** código e strings de origem em inglês; interface em português via `locale`, com o core traduzido por localize.drupal.org e os projetos próprios por arquivos `.po` versionados em `translations/`; documentação em português.
+
+**Alternativas:** escrever as strings direto em português no código; traduzir pela UI do Drupal (`/admin/config/regional/translate`) e depender só do dump.
 
 **Por quê:**
-- É a convenção do Drupal e o que o padrão de código `Drupal` do phpcs espera. Strings em inglês são a chave de tradução; o pt-BR pode ser instalado depois sem tocar no código.
+- É a convenção do Drupal e o que o padrão de código `Drupal` do phpcs espera. Strings em inglês são a chave de tradução; qualquer idioma entra sem tocar no código.
+- Strings em português no código travariam o site num idioma e ficariam fora do fluxo do `locale`. Traduzir só pela UI deixaria a tradução presa ao banco: um deploy em ambiente novo perderia tudo.
+- Com o `.po` no projeto e o `interface translation server pattern` no `info.yml`, o `locale:update` importa nossas traduções pelo mesmo caminho das do core. O arquivo é revisável em code review e o `msgfmt` valida a sintaxe.
+- As mensagens da API seguem o mesmo mecanismo. O cliente programa contra o campo `code`, que é estável; a mensagem é para humanos e sai no idioma do site.
 - Documentação em português porque quem avalia lê em português.
 
 ---
