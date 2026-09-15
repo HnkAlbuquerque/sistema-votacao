@@ -10,6 +10,8 @@
     <head-placeholder token="{{ placeholder_token }}">
     <title>{{ head_title|safe_join(' | ') }}</title>
     <meta name="color-scheme" content="light dark">
+    {# Applies the saved color scheme before the first paint to avoid a flash. #}
+    <script>try{var t=localStorage.getItem('votacao-theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}</script>
     <css-placeholder token="{{ placeholder_token }}">
     <js-placeholder token="{{ placeholder_token }}">
   </head>

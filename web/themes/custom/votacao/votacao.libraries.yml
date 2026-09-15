@@ -3,3 +3,5 @@ global:
   css:
     theme:
       css/main.css: {}
+  js:
+    js/theme-toggle.js: { attributes: { defer: true } }

@@ -61,7 +61,7 @@ O dump traz duas perguntas de exemplo com votos, `melhor-linguagem` (resultados 
 3. Aba **Results**: total por opção, percentual e verificação de integridade dos contadores.
 4. **Configuration » System » Voting settings** (`/admin/config/system/voting`): chave geral para desabilitar a votação e limite de tentativas por usuário.
 
-**Votação** (`/votacao` e `/votacao/{identificador}`): usuário logado vê as opções como cards selecionáveis e um botão de voto. Depois de votar, vê as barras de resultado com a própria escolha destacada, ou apenas a confirmação, conforme a pergunta. Anônimo vê a pergunta e um link de login.
+**Votação** (`/votacao` e `/votacao/{identificador}`): a lista mostra 12 perguntas por página. O usuário logado vê as opções como cards selecionáveis e um botão de voto. Depois de votar, vê as barras de resultado com a própria escolha destacada, ou apenas a confirmação, conforme a pergunta. Anônimo vê a pergunta e um link de login.
 
 ## Tema e build do front-end
 
@@ -69,7 +69,7 @@ O site público usa o tema custom `votacao` (`web/themes/custom/votacao`), basea
 
 - **Design tokens** em `tokens/design-tokens.json`: cores em HSL (modelo do shadcn/ui: `background`, `foreground`, `primary`, `muted`, `border`, `ring`…), espaçamento, raio, tipografia, sombras, breakpoints. O build gera `scss/abstracts/_tokens.generated.scss` com as custom properties para light e dark.
 - **SCSS em BEM**: um arquivo por bloco em `scss/components/` (`option-card`, `results`, `question-list`, `button`, `badge`, `notice`, `form`…), com `layout/` e `base/`. Os nomes de classe são emitidos pelas templates do módulo `voting`, então o tema só estiliza.
-- **Dark mode** automático por `prefers-color-scheme`, sem JavaScript.
+- **Dark mode**: segue o sistema por padrão e tem um botão no cabeçalho para alternar. A escolha fica em `localStorage` e é aplicada antes da primeira pintura, sem piscar. É o único JavaScript do tema.
 - **Sem dependência em runtime**: nenhuma fonte externa, CDN ou framework. O CSS compilado (`css/main.css`) é versionado, então `lando start` já entrega o tema pronto.
 
 Só quem for alterar o SCSS precisa do Node:

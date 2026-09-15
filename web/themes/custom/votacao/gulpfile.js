@@ -63,8 +63,11 @@ function tokens(cb) {
     }
   }
 
+  // Light is the default. Dark applies when the OS prefers it and the user
+  // has not forced light, or whenever the user forced dark (data-theme).
   lines.push(':root {', ...light, '}', '');
-  lines.push('@media (prefers-color-scheme: dark) {', '  :root {', ...dark.map((l) => '  ' + l), '  }', '}', '');
+  lines.push('@media (prefers-color-scheme: dark) {', '  :root:not([data-theme="light"]) {', ...dark.map((l) => '  ' + l), '  }', '}', '');
+  lines.push(':root[data-theme="dark"] {', ...dark, '}', '');
 
   fs.mkdirSync(path.dirname(paths.generated), { recursive: true });
   fs.writeFileSync(paths.generated, lines.join('\n'));

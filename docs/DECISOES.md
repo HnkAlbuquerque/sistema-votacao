@@ -292,7 +292,8 @@ A seção final lista perguntas que costumam aparecer em revisão, com a respost
 - `stable9` dá markup limpo e nenhum CSS de opinião; o `starterkit` copiaria dezenas de arquivos CSS que seriam apagados em seguida.
 - Tokens em JSON são a fonte única. O modelo semântico do shadcn/ui (`background`, `foreground`, `primary`, `muted`, `border`, `ring`, `radius`) resolve light e dark com as mesmas variáveis, e a paleta Zinc + Indigo dá identidade sem competir com o conteúdo. Trocar a cor primária é editar uma linha e rodar o build.
 - BEM deixa cada componente autocontido e legível: `.option-card__title`, `.results__row--mine`. Nenhum seletor depende da estrutura do DOM do Drupal além das classes que o próprio módulo emite.
-- Gulp é suficiente para o pipeline tokens → sass → autoprefixer. Sem bundler, sem JS.
+- Gulp é suficiente para o pipeline tokens → sass → autoprefixer. Sem bundler.
+- O único JavaScript do tema é o botão de light/dark: sem escolha salva o site segue o sistema; com escolha, `data-theme` no `<html>` sobrepõe. Um script inline no `<head>` aplica a escolha antes do CSS pintar, para não piscar. Os tokens são gerados já com as três condições (padrão claro, `prefers-color-scheme: dark` sem forçar claro, `data-theme="dark"`).
 
 **O que perderíamos com Tailwind ou CDN:** dependência em runtime ou classes utilitárias espalhadas pelas templates do módulo, o que quebraria a separação da seção 21.
 

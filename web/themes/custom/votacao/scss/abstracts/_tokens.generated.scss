@@ -68,7 +68,7 @@ $breakpoints: (sm: 640px, md: 768px, lg: 1024px);
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --color-background: 240 10% 3.9%;
     --color-foreground: 0 0% 98%;
     --color-card: 240 10% 5.9%;
@@ -93,4 +93,30 @@ $breakpoints: (sm: 640px, md: 768px, lg: 1024px);
     --color-input: 240 3.7% 15.9%;
     --color-ring: 234 89% 74%;
   }
+}
+
+:root[data-theme="dark"] {
+  --color-background: 240 10% 3.9%;
+  --color-foreground: 0 0% 98%;
+  --color-card: 240 10% 5.9%;
+  --color-card-foreground: 0 0% 98%;
+  --color-muted: 240 3.7% 15.9%;
+  --color-muted-foreground: 240 5% 64.9%;
+  --color-accent: 240 3.7% 15.9%;
+  --color-accent-foreground: 0 0% 98%;
+  --color-primary: 234 89% 74%;
+  --color-primary-foreground: 240 10% 3.9%;
+  --color-primary-soft: 244 47% 20%;
+  --color-success: 158 64% 52%;
+  --color-success-foreground: 240 10% 3.9%;
+  --color-success-soft: 164 86% 16%;
+  --color-warning: 43 96% 56%;
+  --color-warning-foreground: 240 10% 3.9%;
+  --color-warning-soft: 32 81% 20%;
+  --color-destructive: 0 91% 71%;
+  --color-destructive-foreground: 240 10% 3.9%;
+  --color-destructive-soft: 0 63% 20%;
+  --color-border: 240 3.7% 15.9%;
+  --color-input: 240 3.7% 15.9%;
+  --color-ring: 234 89% 74%;
 }

@@ -1,0 +1,57 @@
+@use '../abstracts/mixins' as *;
+
+// Light/dark switch in the header. Which icon shows depends on the
+// effective scheme: the sun invites switching to light, the moon to dark.
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid color(border);
+  border-radius: radius(md);
+  background: color(background);
+  color: color(foreground);
+  cursor: pointer;
+  @include transition(background-color, border-color);
+
+  &:hover {
+    background: color(accent);
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  &__icon {
+    display: none;
+
+    &--moon {
+      display: block;
+    }
+  }
+}
+
+// Dark effective scheme: show the sun.
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .theme-toggle__icon {
+    &--moon {
+      display: none;
+    }
+
+    &--sun {
+      display: block;
+    }
+  }
+}
+
+:root[data-theme='dark'] .theme-toggle__icon {
+  &--moon {
+    display: none;
+  }
+
+  &--sun {
+    display: block;
+  }
+}

@@ -9,11 +9,15 @@
   backdrop-filter: saturate(180%) blur(8px);
 
   &__inner {
+    display: flex;
+    align-items: center;
+    gap: space(3);
     min-height: var(--layout-header-height);
   }
 
   // Drupal wraps the header blocks in a region div; that is the flex row.
   .region--header {
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: space-between;
