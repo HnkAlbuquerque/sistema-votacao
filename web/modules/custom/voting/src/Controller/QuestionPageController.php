@@ -25,6 +25,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 final class QuestionPageController extends ControllerBase {
 
+  /**
+   * Questions per page on the public list.
+   */
+  private const PAGE_SIZE = 12;
+
   public function __construct(
     private readonly VoteManagerInterface $voteManager,
     private readonly VotingSettings $settings,
@@ -56,6 +61,7 @@ final class QuestionPageController extends ControllerBase {
       ->accessCheck(TRUE)
       ->condition('status', 1)
       ->sort('title')
+      ->pager(self::PAGE_SIZE)
       ->execute();
 
     $questions = [];
@@ -71,9 +77,16 @@ final class QuestionPageController extends ControllerBase {
     }
 
     $build = [
-      '#theme' => 'voting_question_list',
-      '#questions' => $questions,
-      '#disabled' => !$this->settings->isEnabled(),
+      'list' => [
+        '#theme' => 'voting_question_list',
+        '#questions' => $questions,
+        '#disabled' => !$this->settings->isEnabled(),
+      ],
+      // The pager element adds the "url.query_args.pagers:0" cache context.
+      'pager' => [
+        '#type' => 'pager',
+        '#quantity' => 5,
+      ],
     ];
 
     (new CacheableMetadata())

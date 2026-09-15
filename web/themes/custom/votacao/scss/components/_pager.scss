@@ -1,0 +1,54 @@
+@use '../abstracts/mixins' as *;
+
+// Core pager (stable9 markup): nav.pager > ul.pager__items > li.pager__item.
+.pager {
+  margin-top: space(8);
+
+  &__items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: space(1);
+    list-style: none;
+  }
+
+  &__item {
+    a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 2.25rem;
+      height: 2.25rem;
+      padding-inline: space(3);
+      border: 1px solid transparent;
+      border-radius: radius(md);
+      color: color(foreground);
+      font-size: font-size(sm);
+      font-weight: weight(medium);
+      text-decoration: none;
+      @include transition(background-color, border-color);
+
+      &:hover {
+        background: color(accent);
+        text-decoration: none;
+      }
+
+      &:focus-visible {
+        @include focus-ring;
+      }
+    }
+
+    &.is-active a {
+      border-color: color(border);
+      background: color(card);
+      box-shadow: shadow(sm);
+    }
+
+    &--ellipsis {
+      display: inline-flex;
+      align-items: center;
+      padding-inline: space(2);
+      color: color(muted-foreground);
+    }
+  }
+}
