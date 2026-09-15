@@ -276,12 +276,12 @@ Cache:
 
 Público (tema `votacao`):
 
-- `/votacao` – lista de perguntas ativas em cards, 12 por página com o pager do core, badges de
+- `/votacao` – página inicial do site (`system.site: page.front`). Lista de perguntas ativas em cards, 12 por página com o pager do core, badges de
   quantidade de opções e de visibilidade dos resultados (cache por `voting_question_list` + config
   + contexto do pager).
 - `/votacao/{slug}` – descrição, cards das opções (imagem em estilo `medium`) e o desfecho da
-  seção 6. No formulário, cada card é a label de um radio; após o voto, o card escolhido fica
-  destacado e os resultados aparecem como barras. Contexto de cache `user`; os resultados têm `max-age: 0`.
+  seção 6, com link "All questions" de volta à lista. No formulário, cada card é a label de um
+  radio; após o voto, o card escolhido fica destacado e os resultados aparecem como barras. Contexto de cache `user`; os resultados têm `max-age: 0`.
 - O markup e as classes BEM vêm das templates do módulo (`voting-*.html.twig`); o tema só
   estiliza e pode sobrescrever qualquer template. Tokens de design em JSON geram as custom
   properties de light e dark mode; o CSS compilado é versionado. O modo segue o sistema, com um

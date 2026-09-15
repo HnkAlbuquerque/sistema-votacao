@@ -33,7 +33,7 @@ lando db-import db/dump.sql.gz
 lando drush cr
 ```
 
-URLs após o `lando start`: `https://votacao.lndo.site` (ou a porta local que o Lando imprimir).
+URLs após o `lando start`: `https://votacao.lndo.site` (ou a porta local que o Lando imprimir). A página inicial é a lista de perguntas.
 
 Alternativa sem o dump, instalando do zero a partir da configuração exportada:
 

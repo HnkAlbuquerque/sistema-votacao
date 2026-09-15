@@ -11,6 +11,9 @@
  */
 #}
 <article class="question">
+  <a class="question__back" href="{{ path('voting.questions') }}">
+    <span class="question__back-arrow" aria-hidden="true">&larr;</span> {{ 'All questions'|t }}
+  </a>
   {% if description %}
     <p class="question__description">{{ description|nl2br }}</p>
   {% endif %}
