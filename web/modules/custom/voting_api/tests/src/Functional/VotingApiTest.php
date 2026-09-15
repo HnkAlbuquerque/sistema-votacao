@@ -95,6 +95,29 @@ final class VotingApiTest extends BrowserTestBase {
   }
 
   /**
+   * The list is paginated through the page and limit parameters.
+   */
+  public function testListPagination(): void {
+    foreach (['b', 'c', 'd', 'e'] as $suffix) {
+      Question::create(['title' => "Question $suffix", 'identifier' => "question-$suffix", 'status' => 1])->save();
+    }
+
+    $response = $this->request('GET', '/api/v1/questions', ['query' => ['limit' => 2]]);
+    $this->assertSame(200, $response->getStatusCode(), (string) $response->getBody());
+    $body = $this->decode($response);
+    $this->assertCount(2, $body['data']);
+    $this->assertSame(['count' => 2, 'total' => 5, 'page' => 1, 'limit' => 2, 'pages' => 3], $body['meta']);
+
+    $body = $this->decode($this->request('GET', '/api/v1/questions', ['query' => ['limit' => 2, 'page' => 3]]));
+    $this->assertCount(1, $body['data']);
+    $this->assertSame(3, $body['meta']['page']);
+
+    $response = $this->request('GET', '/api/v1/questions', ['query' => ['page' => 0]]);
+    $this->assertSame(400, $response->getStatusCode());
+    $this->assertSame('invalid_payload', $this->decode($response)['error']['code']);
+  }
+
+  /**
    * The full vote flow: auth, validation, success, duplicate, results.
    */
   public function testVoteFlow(): void {

@@ -240,7 +240,7 @@ Prefixo `/api/v1`. Todas as rotas exceto `health` têm `_auth: [basic_auth, cook
 
 | Método | Rota | Requisitos | Resposta |
 |---|---|---|---|
-| GET | `/questions` | `view voting questions` | `data: [{id, title, description, show_results, options_count}]`, `meta.count` |
+| GET | `/questions?page=1&limit=20` | `view voting questions` | `data: [{id, title, description, show_results, options_count}]`, `meta: {count, total, page, limit, pages}`; `limit` máximo 100; parâmetro inválido → 400 |
 | GET | `/questions/{id}` | `voting_question.view` | `data: {id, title, description, show_results, options: [{id, title, description, image_url}]}` |
 | POST | `/questions/{id}/vote` | logado, `vote in voting questions`, view, CSRF header (só cookie) | 201 + resultado (formato abaixo) |
 | GET | `/questions/{id}/results` | logado, view | 200 + resultado, ou 403 `vote_required` / `results_hidden` |
@@ -269,7 +269,8 @@ Cache:
 
 - `list` e `show`: `CacheableJsonResponse` com tags `voting_question_list`, `voting_option_list`
   (tags de lista que o Entity API invalida sozinho ao salvar/excluir), tags das entidades
-  carregadas e `config:voting.settings`; contexto `user.permissions`.
+  carregadas e `config:voting.settings`; contexto `user.permissions` e, na lista, `url.query_args:page`
+  e `url.query_args:limit`, para cada página ser uma entrada de cache própria.
 - `vote`, `results`, `health`: `JsonResponse` com `Cache-Control: no-store, private`.
 
 ## 9. CMS
@@ -335,13 +336,13 @@ apagar uma pergunta apaga opções, votos e contadores (log `notice`).
 - Serviço `node:20` no Lando com tooling `lando npm` e `lando gulp`, usado só para compilar o tema.
 - Config exportada em `config/sync` (`lando drush cex`), dump em `db/dump.sql.gz`, Postman em
   `postman/` (collection com testes automáticos por request + environment local).
-- Testes (`lando phpunit`, 16 no total):
+- Testes (`lando phpunit`, 17 no total):
   - Kernel `VoteManagerTest` (12): voto grava linha e contador; segundo voto rejeitado; unique key
     segura mesmo sem o pré-check e mantém o contador; opção de outra pergunta; anônimo; pergunta
     inativa; kill switch bloqueia voto e resultado; resultado exige voto; resultado oculto continua
     oculto para votante e visível para quem tem bypass; flood limita votos válidos; flood conta
     tentativas rejeitadas; cascata de exclusão.
-  - Functional `VotingApiTest` (4): list/show/404/inativa; fluxo completo do voto (401, credencial
+  - Functional `VotingApiTest` (5): list/show/404/inativa; paginação da lista; fluxo completo do voto (401, credencial
     errada, 400, 422, `vote_required`, 201, 409, results 200 com `no-store`); resultados ocultos;
     kill switch em todas as rotas menos health.
 - `lando phpcs` (ruleset `phpcs.xml.dist`: Drupal + DrupalPractice em módulos e tema) limpo.
@@ -371,7 +372,6 @@ apagar uma pergunta apaga opções, votos e contadores (log `notice`).
 
 ## 14. Limitações conhecidas e próximos passos
 
-- Listagem de perguntas sem paginação: adequado para dezenas de perguntas, não para milhares.
 - `node` instalado pelo perfil `minimal` sem uso; candidato a desinstalação.
 - Autenticação por Basic Auth é adequada para o teste; em produção, `simple_oauth` ou API key por cliente.
 - O teste de concorrência citado no README foi manual (requisições paralelas via shell), não está automatizado.

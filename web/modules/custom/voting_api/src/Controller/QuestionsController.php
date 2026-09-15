@@ -13,11 +13,19 @@ use Drupal\voting_api\Response\ApiResponse;
 use Drupal\voting_api\Serializer\QuestionSerializer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Read endpoints: question list, single question and results.
  */
 final class QuestionsController extends ControllerBase {
+
+  /**
+   * Default and maximum number of questions per page on the list endpoint.
+   */
+  public const DEFAULT_LIMIT = 20;
+  public const MAX_LIMIT = 100;
 
   public function __construct(
     private readonly VoteManagerInterface $voteManager,
@@ -37,14 +45,26 @@ final class QuestionsController extends ControllerBase {
   }
 
   /**
-   * GET /api/v1/questions – active questions.
+   * GET /api/v1/questions?page=1&limit=20 – active questions, paginated.
+   *
+   * Pages are 1-based; "limit" is capped at MAX_LIMIT. The "meta" object
+   * carries count (items on this page), total, page, limit and pages.
    */
-  public function list(): JsonResponse {
+  public function list(Request $request): JsonResponse {
+    $page = $this->readPositiveInt($request, 'page', 1);
+    $limit = min($this->readPositiveInt($request, 'limit', self::DEFAULT_LIMIT), self::MAX_LIMIT);
+
     $storage = $this->entityTypeManager()->getStorage('voting_question');
+    $total = (int) $storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('status', 1)
+      ->count()
+      ->execute();
     $ids = $storage->getQuery()
       ->accessCheck(TRUE)
       ->condition('status', 1)
       ->sort('title')
+      ->range(($page - 1) * $limit, $limit)
       ->execute();
 
     $data = [];
@@ -56,9 +76,30 @@ final class QuestionsController extends ControllerBase {
     $cacheability = (new CacheableMetadata())
       ->addCacheTags(['voting_question_list', 'voting_option_list'])
       ->addCacheTags($this->settings->getCacheTags())
-      ->addCacheContexts(['user.permissions']);
+      ->addCacheContexts(['user.permissions', 'url.query_args:page', 'url.query_args:limit']);
 
-    return ApiResponse::cacheable($data, [$cacheability], ['count' => count($data)]);
+    return ApiResponse::cacheable($data, [$cacheability], [
+      'count' => count($data),
+      'total' => $total,
+      'page' => $page,
+      'limit' => $limit,
+      'pages' => (int) ceil($total / $limit),
+    ]);
+  }
+
+  /**
+   * Reads a positive integer query parameter, or throws a 400.
+   */
+  private function readPositiveInt(Request $request, string $name, int $default): int {
+    $value = $request->query->get($name);
+    if ($value === NULL || $value === '') {
+      return $default;
+    }
+    $int = filter_var($value, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+    if ($int === FALSE) {
+      throw new BadRequestHttpException(sprintf('The "%s" parameter must be a positive integer.', $name));
+    }
+    return $int;
   }
 
   /**

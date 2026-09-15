@@ -92,6 +92,7 @@ A seção final lista perguntas que costumam aparecer em revisão, com a respost
 - `ApiResponse` concentra o envelope (`data`/`meta` ou `error`) e os cabeçalhos de cache. Nenhum controller monta JSON à mão.
 - O serializer só transforma entidades e o DTO de resultado em arrays. Não faz access check nem I/O, então é trivial de testar e de trocar.
 - Um subscriber único traduz `AlreadyVotedException` em 409, `InvalidOptionException` em 422 e assim por diante. Controllers não têm `try/catch`, e a resposta de erro tem sempre o mesmo formato.
+- A listagem é paginada por `page` e `limit` (padrão 20, máximo 100), com `meta` trazendo `total` e `pages`. Sem teto, um cliente poderia pedir milhares de perguntas com as opções contadas uma a uma; com o teto, o custo por requisição é limitado e cada página é uma entrada de cache própria.
 
 ---
 

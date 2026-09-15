@@ -104,18 +104,18 @@ Autenticação: **HTTP Basic** com usuário e senha do Drupal (módulo `basic_au
 
 | Método | Rota | Auth | Descrição |
 |---|---|---|---|
-| GET | `/api/v1/questions` | não | Perguntas ativas |
+| GET | `/api/v1/questions?page=1&limit=20` | não | Perguntas ativas, paginadas (`limit` máximo 100) |
 | GET | `/api/v1/questions/{id}` | não | Pergunta com opções |
 | POST | `/api/v1/questions/{id}/vote` | sim | Registra o voto. Body `{"option_id": 3}` ou `option_id=3` |
 | GET | `/api/v1/questions/{id}/results` | sim | Resultados, se a pergunta permitir e o usuário já tiver votado |
 | GET | `/api/v1/health` | não | Estado do banco e da chave geral |
 
-`{id}` é o identificador (slug) da pergunta.
+`{id}` é o identificador (slug) da pergunta. Na listagem, `meta` traz `count` (itens na página), `total`, `page`, `limit` e `pages`; `page` ou `limit` inválidos respondem 400.
 
 ### Exemplos
 
 ```bash
-curl https://votacao.lndo.site/api/v1/questions
+curl 'https://votacao.lndo.site/api/v1/questions?page=2&limit=10'
 curl https://votacao.lndo.site/api/v1/questions/melhor-linguagem
 curl -u alice:alice -X POST -H 'Content-Type: application/json' \
      -d '{"option_id": 2}' https://votacao.lndo.site/api/v1/questions/melhor-linguagem/vote
@@ -145,7 +145,7 @@ Quando a pergunta oculta os resultados, `results_visible` é `false`, `total_vot
 
 | HTTP | `code` | Quando |
 |---|---|---|
-| 400 | `invalid_payload` | body não é JSON válido ou `option_id` ausente/inválido |
+| 400 | `invalid_payload` | body não é JSON válido, `option_id` ausente/inválido, ou `page`/`limit` inválidos |
 | 401 | `authentication_required` | rota exige login e não veio credencial |
 | 401 | `invalid_credentials` | usuário ou senha incorretos |
 | 403 | `voting_disabled` | chave geral desligada (vale para todas as rotas, exceto health) |
