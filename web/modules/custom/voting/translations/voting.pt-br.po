@@ -335,11 +335,11 @@ msgstr "Páginas públicas"
 msgid "Question list"
 msgstr "Lista de perguntas"
 
-msgid "API (5 routes, {id} is the question identifier)"
-msgstr "API (5 rotas, {id} é o identificador da pergunta)"
+msgid "API (5 routes, {id} is the question identifier, Basic Auth on all but health)"
+msgstr "API (5 rotas, {id} é o identificador da pergunta, Basic Auth em todas menos health)"
 
-msgid "GET health"
-msgstr "GET health"
+msgid "GET health (public)"
+msgstr "GET health (pública)"
 
 msgid "GET list questions"
 msgstr "GET listar perguntas"
@@ -347,11 +347,11 @@ msgstr "GET listar perguntas"
 msgid "GET question"
 msgstr "GET pergunta"
 
-msgid "POST vote (needs auth, body option_id)"
-msgstr "POST votar (exige autenticação, body option_id)"
+msgid "POST vote (body option_id)"
+msgstr "POST votar (body option_id)"
 
-msgid "GET results (needs auth)"
-msgstr "GET resultados (exige autenticação)"
+msgid "GET results"
+msgstr "GET resultados"
 
 msgid "administrator"
 msgstr "administrador"

@@ -34,7 +34,6 @@
     {
       "name": "List questions",
       "request": {
-        "auth": { "type": "noauth" },
         "method": "GET",
         "url": {
           "raw": "{{base_url}}/api/v1/questions?page=1&limit=20",
@@ -57,7 +56,6 @@
     {
       "name": "Get question",
       "request": {
-        "auth": { "type": "noauth" },
         "method": "GET",
         "url": { "raw": "{{base_url}}/api/v1/questions/{{question_id}}", "host": ["{{base_url}}"], "path": ["api", "v1", "questions", "{{question_id}}"] }
       },
@@ -106,10 +104,19 @@
       "item": [
         {
           "name": "Question not found (404)",
-          "request": { "auth": { "type": "noauth" }, "method": "GET",
+          "request": { "method": "GET",
             "url": { "raw": "{{base_url}}/api/v1/questions/does-not-exist", "host": ["{{base_url}}"], "path": ["api", "v1", "questions", "does-not-exist"] } },
           "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
             "pm.test('404 not_found', () => { pm.response.to.have.status(404); pm.expect(pm.response.json().error.code).to.eql('not_found'); });"
+          ] } }]
+        },
+        {
+          "name": "List without credentials (401)",
+          "request": { "auth": { "type": "noauth" }, "method": "GET",
+            "url": { "raw": "{{base_url}}/api/v1/questions", "host": ["{{base_url}}"], "path": ["api", "v1", "questions"] } },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('401 authentication_required', () => { pm.response.to.have.status(401); pm.expect(pm.response.json().error.code).to.eql('authentication_required'); });",
+            "pm.test('Basic challenge', () => pm.expect(pm.response.headers.get('WWW-Authenticate')).to.include('Basic'));"
           ] } }]
         },
         {

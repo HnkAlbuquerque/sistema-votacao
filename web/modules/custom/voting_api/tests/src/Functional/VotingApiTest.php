@@ -72,47 +72,67 @@ final class VotingApiTest extends BrowserTestBase {
   }
 
   /**
+   * Every business endpoint rejects anonymous clients with a 401 challenge.
+   */
+  public function testReadsRequireAuthentication(): void {
+    foreach (['/api/v1/questions', '/api/v1/questions/best-language', '/api/v1/questions/best-language/results'] as $path) {
+      $response = $this->request('GET', $path);
+      $this->assertSame(401, $response->getStatusCode(), $path);
+      $this->assertSame('authentication_required', $this->decode($response)['error']['code'], $path);
+      $this->assertStringContainsString('Basic', $response->getHeaderLine('WWW-Authenticate'), $path);
+    }
+    $this->assertSame(200, $this->request('GET', '/api/v1/health')->getStatusCode());
+  }
+
+  /**
    * Lists only active questions, with their option count.
    */
   public function testListAndShow(): void {
-    $response = $this->request('GET', '/api/v1/questions');
+    $auth = $this->auth();
+
+    $response = $this->request('GET', '/api/v1/questions', ['auth' => $auth]);
     $this->assertSame(200, $response->getStatusCode());
     $body = $this->decode($response);
     $this->assertSame(1, $body['meta']['count']);
     $this->assertSame('best-language', $body['data'][0]['id']);
     $this->assertSame(2, $body['data'][0]['options_count']);
 
-    $response = $this->request('GET', '/api/v1/questions/best-language');
+    $response = $this->request('GET', '/api/v1/questions/best-language', ['auth' => $auth]);
     $this->assertSame(200, $response->getStatusCode());
     $body = $this->decode($response);
     $this->assertSame(['PHP', 'Go'], array_column($body['data']['options'], 'title'));
     $this->assertNull($body['data']['options'][0]['image_url']);
 
-    $this->assertSame(404, $this->request('GET', '/api/v1/questions/missing')->getStatusCode());
-    $this->assertSame('not_found', $this->decode($this->request('GET', '/api/v1/questions/missing'))['error']['code']);
-    // Inactive question: anonymous clients are challenged to authenticate.
-    $this->assertSame(401, $this->request('GET', '/api/v1/questions/draft')->getStatusCode());
+    $response = $this->request('GET', '/api/v1/questions/missing', ['auth' => $auth]);
+    $this->assertSame(404, $response->getStatusCode());
+    $this->assertSame('not_found', $this->decode($response)['error']['code']);
+
+    // Inactive question: not viewable by regular users.
+    $response = $this->request('GET', '/api/v1/questions/draft', ['auth' => $auth]);
+    $this->assertSame(403, $response->getStatusCode());
+    $this->assertSame('access_denied', $this->decode($response)['error']['code']);
   }
 
   /**
    * The list is paginated through the page and limit parameters.
    */
   public function testListPagination(): void {
+    $auth = $this->auth();
     foreach (['b', 'c', 'd', 'e'] as $suffix) {
       Question::create(['title' => "Question $suffix", 'identifier' => "question-$suffix", 'status' => 1])->save();
     }
 
-    $response = $this->request('GET', '/api/v1/questions', ['query' => ['limit' => 2]]);
+    $response = $this->request('GET', '/api/v1/questions', ['auth' => $auth, 'query' => ['limit' => 2]]);
     $this->assertSame(200, $response->getStatusCode(), (string) $response->getBody());
     $body = $this->decode($response);
     $this->assertCount(2, $body['data']);
     $this->assertSame(['count' => 2, 'total' => 5, 'page' => 1, 'limit' => 2, 'pages' => 3], $body['meta']);
 
-    $body = $this->decode($this->request('GET', '/api/v1/questions', ['query' => ['limit' => 2, 'page' => 3]]));
+    $body = $this->decode($this->request('GET', '/api/v1/questions', ['auth' => $auth, 'query' => ['limit' => 2, 'page' => 3]]));
     $this->assertCount(1, $body['data']);
     $this->assertSame(3, $body['meta']['page']);
 
-    $response = $this->request('GET', '/api/v1/questions', ['query' => ['page' => 0]]);
+    $response = $this->request('GET', '/api/v1/questions', ['auth' => $auth, 'query' => ['page' => 0]]);
     $this->assertSame(400, $response->getStatusCode());
     $this->assertSame('invalid_payload', $this->decode($response)['error']['code']);
   }
@@ -122,7 +142,7 @@ final class VotingApiTest extends BrowserTestBase {
    */
   public function testVoteFlow(): void {
     $path = '/api/v1/questions/best-language/vote';
-    $auth = [$this->voter->getAccountName(), $this->voter->passRaw];
+    $auth = $this->auth();
 
     $this->assertSame(401, $this->request('POST', $path, ['json' => ['option_id' => $this->optionIds[0]]])->getStatusCode());
     $response = $this->request('POST', $path, [
@@ -170,7 +190,7 @@ final class VotingApiTest extends BrowserTestBase {
    */
   public function testHiddenResults(): void {
     Question::load(1)->set('show_results', FALSE)->save();
-    $auth = [$this->voter->getAccountName(), $this->voter->passRaw];
+    $auth = $this->auth();
 
     $response = $this->request('POST', '/api/v1/questions/best-language/vote', [
       'auth' => $auth,
@@ -192,11 +212,11 @@ final class VotingApiTest extends BrowserTestBase {
    */
   public function testKillSwitch(): void {
     $this->config('voting.settings')->set('enabled', FALSE)->save();
-    $auth = [$this->voter->getAccountName(), $this->voter->passRaw];
+    $auth = $this->auth();
 
     foreach ([
-      ['GET', '/api/v1/questions', []],
-      ['GET', '/api/v1/questions/best-language', []],
+      ['GET', '/api/v1/questions', ['auth' => $auth]],
+      ['GET', '/api/v1/questions/best-language', ['auth' => $auth]],
       [
         'POST',
         '/api/v1/questions/best-language/vote',
@@ -212,6 +232,16 @@ final class VotingApiTest extends BrowserTestBase {
     $response = $this->request('GET', '/api/v1/health');
     $this->assertSame(200, $response->getStatusCode());
     $this->assertFalse($this->decode($response)['data']['voting_enabled']);
+  }
+
+  /**
+   * Basic Auth credentials of the regular voter.
+   *
+   * @return string[]
+   *   Username and password, as Guzzle expects them.
+   */
+  private function auth(): array {
+    return [$this->voter->getAccountName(), $this->voter->passRaw];
   }
 
   /**

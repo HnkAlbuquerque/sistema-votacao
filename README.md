@@ -102,7 +102,7 @@ Fora do Lando, com Node 20 instalado, `npm install` e `npx gulp build` dentro de
 | Permissão | Padrão no dump | Para quê |
 |---|---|---|
 | `administer voting` | administrador | CRUD, settings, aba de resultados |
-| `view voting questions` | anônimo, autenticado | ver perguntas no site e na API |
+| `view voting questions` | anônimo, autenticado | ver perguntas no site; na API, junto com autenticação |
 | `vote in voting questions` | autenticado | votar no site e na API |
 | `view voting results` | ninguém (além do admin) | ver totais mesmo com resultados ocultos e sem ter votado |
 
@@ -115,12 +115,12 @@ Prefixo `/api/v1`. Respostas sempre em JSON com envelope:
 { "error": { "code": "already_voted", "message": "You have already voted on this question." } }
 ```
 
-Autenticação: **HTTP Basic** com usuário e senha do Drupal (módulo `basic_auth` do core). Leituras públicas não exigem credenciais.
+Autenticação: **HTTP Basic** com usuário e senha do Drupal (módulo `basic_auth` do core) em todas as rotas de negócio. Só `/api/v1/health` é pública, para monitoramento. Sem credencial a resposta é `401` com `WWW-Authenticate: Basic`.
 
 | Método | Rota | Auth | Descrição |
 |---|---|---|---|
-| GET | `/api/v1/questions?page=1&limit=20` | não | Perguntas ativas, paginadas (`limit` máximo 100) |
-| GET | `/api/v1/questions/{id}` | não | Pergunta com opções |
+| GET | `/api/v1/questions?page=1&limit=20` | sim | Perguntas ativas, paginadas (`limit` máximo 100) |
+| GET | `/api/v1/questions/{id}` | sim | Pergunta com opções |
 | POST | `/api/v1/questions/{id}/vote` | sim | Registra o voto. Body `{"option_id": 3}` ou `option_id=3` |
 | GET | `/api/v1/questions/{id}/results` | sim | Resultados, se a pergunta permitir e o usuário já tiver votado |
 | GET | `/api/v1/health` | não | Estado do banco e da chave geral |
@@ -130,8 +130,8 @@ Autenticação: **HTTP Basic** com usuário e senha do Drupal (módulo `basic_au
 ### Exemplos
 
 ```bash
-curl 'https://votacao.lndo.site/api/v1/questions?page=2&limit=10'
-curl https://votacao.lndo.site/api/v1/questions/melhor-linguagem
+curl -u alice:alice 'https://votacao.lndo.site/api/v1/questions?page=2&limit=10'
+curl -u alice:alice https://votacao.lndo.site/api/v1/questions/melhor-linguagem
 curl -u alice:alice -X POST -H 'Content-Type: application/json' \
      -d '{"option_id": 2}' https://votacao.lndo.site/api/v1/questions/melhor-linguagem/vote
 curl -u alice:alice https://votacao.lndo.site/api/v1/questions/melhor-linguagem/results
@@ -177,7 +177,12 @@ Quando a pergunta oculta os resultados, `results_visible` é `false`, `total_vot
 
 ### Postman
 
-Importe `postman/voting-api.postman_collection.json` e `postman/voting-local.postman_environment.json`. A collection tem testes automáticos em cada requisição e encadeia `question_id` e `option_id` a partir das respostas.
+Importe `postman/voting-api.postman_collection.json` e `postman/voting-local.postman_environment.json`. A collection usa Basic Auth herdada em todas as requisições de negócio, tem testes automáticos em cada uma e encadeia `question_id` e `option_id` a partir das respostas. Para rodar a collection inteira pela linha de comando, sem abrir o Postman:
+
+```bash
+npx newman run postman/voting-api.postman_collection.json \
+  -e postman/voting-local.postman_environment.json --insecure
+```
 
 ## Estrutura do código
 

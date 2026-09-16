@@ -1,6 +1,8 @@
-# Every public endpoint carries `_voting_enabled` so the global kill switch
-# closes the whole external flow at once. `_auth` allows Basic Auth for
-# external clients and cookies for calls made from the site itself.
+# Every business endpoint requires an authenticated user (`_user_is_logged_in`)
+# and carries `_voting_enabled`, so the global kill switch closes the whole
+# external flow at once. `_auth` allows Basic Auth for external clients and
+# cookies for calls made from the site itself. Only /health is public, for
+# monitoring probes.
 
 voting_api.questions:
   path: '/api/v1/questions'
@@ -8,6 +10,7 @@ voting_api.questions:
     _controller: '\Drupal\voting_api\Controller\QuestionsController::list'
   methods: [GET]
   requirements:
+    _user_is_logged_in: 'TRUE'
     _permission: 'view voting questions'
     _voting_enabled: 'TRUE'
   options:
@@ -19,6 +22,7 @@ voting_api.question:
     _controller: '\Drupal\voting_api\Controller\QuestionsController::show'
   methods: [GET]
   requirements:
+    _user_is_logged_in: 'TRUE'
     _entity_access: 'voting_question.view'
     _voting_enabled: 'TRUE'
   options:

@@ -42,7 +42,7 @@ endpoint da API chamam exatamente o mesmo `VoteManager::castVote()`.
 | R5 | Usuário acessa cada pergunta e vota | Rota `/votacao/{identifier}` → `QuestionPageController::page()` → `VoteForm` (radios). |
 | R6 | Voto único e identificável por usuário e pergunta | Tabela `voting_vote` com `UNIQUE (question_id, uid)` em `voting.install`; `VoteRepository::recordVote()` converte violação em `AlreadyVotedException`. Só autenticados votam. |
 | R7 | Após votar, resultado conforme config | `QuestionPageController::buildOutcome()`: tabela de resultados ou só agradecimento; API devolve `results_visible`. |
-| R8 | API: listar perguntas | `GET /api/v1/questions` → `QuestionsController::list()` |
+| R8 | API: listar perguntas | `GET /api/v1/questions` → `QuestionsController::list()`; toda a API, menos `health`, exige Basic Auth |
 | R9 | API: exibir pergunta pelo identificador | `GET /api/v1/questions/{identifier}` → `QuestionsController::show()` |
 | R10 | API: registrar voto | `POST /api/v1/questions/{identifier}/vote` → `VoteController::vote()` |
 | R11 | API: resultados conforme config | `GET /api/v1/questions/{identifier}/results` → `QuestionsController::results()` |
@@ -226,7 +226,7 @@ rajada de requisições malformadas custa o mesmo limite que votos válidos.
 | Permissão | No dump | Uso |
 |---|---|---|
 | `administer voting` (restrict access) | administrator | CRUD de perguntas/opções, settings, abas Results e Quick links |
-| `view voting questions` | anonymous, authenticated | `/votacao*` e GETs da API |
+| `view voting questions` | anonymous, authenticated | `/votacao*`; GETs da API exigem também login |
 | `vote in voting questions` | authenticated | `VoteForm` e `POST .../vote` |
 | `view voting results` | ninguém (admin tem por ser admin) | ver contagens mesmo com `show_results = false` e sem ter votado |
 
@@ -239,12 +239,14 @@ mais 100 perguntas de conhecimentos gerais com quatro alternativas, das quais de
 
 ## 8. API (`voting_api`)
 
-Prefixo `/api/v1`. Todas as rotas exceto `health` têm `_auth: [basic_auth, cookie]` e `_voting_enabled`.
+Prefixo `/api/v1`. Todas as rotas exceto `health` exigem usuário autenticado (`_user_is_logged_in`),
+têm `_auth: [basic_auth, cookie]` e `_voting_enabled`. Sem credencial: 401 `authentication_required`
+com desafio `WWW-Authenticate: Basic`.
 
 | Método | Rota | Requisitos | Resposta |
 |---|---|---|---|
-| GET | `/questions?page=1&limit=20` | `view voting questions` | `data: [{id, title, description, show_results, options_count}]`, `meta: {count, total, page, limit, pages}`; `limit` máximo 100; parâmetro inválido → 400 |
-| GET | `/questions/{id}` | `voting_question.view` | `data: {id, title, description, show_results, options: [{id, title, description, image_url}]}` |
+| GET | `/questions?page=1&limit=20` | logado, `view voting questions` | `data: [{id, title, description, show_results, options_count}]`, `meta: {count, total, page, limit, pages}`; `limit` máximo 100; parâmetro inválido → 400 |
+| GET | `/questions/{id}` | logado, `voting_question.view` | `data: {id, title, description, show_results, options: [{id, title, description, image_url}]}` |
 | POST | `/questions/{id}/vote` | logado, `vote in voting questions`, view, CSRF header (só cookie) | 201 + resultado (formato abaixo) |
 | GET | `/questions/{id}/results` | logado, view | 200 + resultado, ou 403 `vote_required` / `results_hidden` |
 | GET | `/health` | público | `{status, database, voting_enabled, drupal, timestamp}`; 503 se o banco não responde |
@@ -343,13 +345,13 @@ apagar uma pergunta apaga opções, votos e contadores (log `notice`).
   (`interface translation project` + `server pattern`) e importados pelo `locale:update`.
 - Config exportada em `config/sync` (`lando drush cex`), dump em `db/dump.sql.gz`, Postman em
   `postman/` (collection com testes automáticos por request + environment local).
-- Testes (`lando phpunit`, 17 no total):
+- Testes (`lando phpunit`, 18 no total):
   - Kernel `VoteManagerTest` (12): voto grava linha e contador; segundo voto rejeitado; unique key
     segura mesmo sem o pré-check e mantém o contador; opção de outra pergunta; anônimo; pergunta
     inativa; kill switch bloqueia voto e resultado; resultado exige voto; resultado oculto continua
     oculto para votante e visível para quem tem bypass; flood limita votos válidos; flood conta
     tentativas rejeitadas; cascata de exclusão.
-  - Functional `VotingApiTest` (5): list/show/404/inativa; paginação da lista; fluxo completo do voto (401, credencial
+  - Functional `VotingApiTest` (6): leituras exigem autenticação (401 com desafio, health pública); list/show/404/inativa; paginação da lista; fluxo completo do voto (401, credencial
     errada, 400, 422, `vote_required`, 201, 409, results 200 com `no-store`); resultados ocultos;
     kill switch em todas as rotas menos health.
 - `lando phpcs` (ruleset `phpcs.xml.dist`: Drupal + DrupalPractice em módulos e tema) limpo.

@@ -41,13 +41,13 @@ final class LinksController extends ControllerBase {
         ],
       ],
       [
-        'title' => $this->t('API (5 routes, {id} is the question identifier)'),
+        'title' => $this->t('API (5 routes, {id} is the question identifier, Basic Auth on all but health)'),
         'links' => [
-          $this->link($this->t('GET health'), 'voting_api.health'),
+          $this->link($this->t('GET health (public)'), 'voting_api.health'),
           $this->link($this->t('GET list questions'), 'voting_api.questions'),
           $this->pattern($this->t('GET question'), 'voting_api.question'),
-          $this->pattern($this->t('POST vote (needs auth, body option_id)'), 'voting_api.vote'),
-          $this->pattern($this->t('GET results (needs auth)'), 'voting_api.results'),
+          $this->pattern($this->t('POST vote (body option_id)'), 'voting_api.vote'),
+          $this->pattern($this->t('GET results'), 'voting_api.results'),
         ],
       ],
     ];

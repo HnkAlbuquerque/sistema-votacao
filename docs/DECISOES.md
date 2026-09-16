@@ -110,15 +110,17 @@ A seção final lista perguntas que costumam aparecer em revisão, com a respost
 
 ---
 
-## 8. Só usuários autenticados votam
+## 8. Só usuários autenticados votam, e toda a API é autenticada
 
-**Decidido:** anônimo vê perguntas, mas não vota. API autentica com `basic_auth` do core; cookie também é aceito (com header CSRF no POST) para chamadas feitas de dentro do site.
+**Decidido:** no site, anônimo vê perguntas, mas não vota. Na API, toda rota de negócio exige usuário autenticado com `basic_auth` do core; cookie também é aceito (com header CSRF no POST) para chamadas feitas de dentro do site. Só `/health` é pública.
 
 **Alternativas:** votar anônimo com cookie/IP; `simple_oauth`; API key com id de usuário externo.
 
 **Por quê:**
 - "Cada voto deve ser identificável e único por usuário." Sem um `uid`, não existe usuário. IP e cookie são triviais de burlar e não identificam ninguém.
 - `basic_auth` é do core, não precisa de configuração de chaves e o Postman suporta nativamente. Para um teste, é o caminho mais curto sem inventar autenticação própria.
+- Leituras autenticadas: o PDF não exige que a listagem seja pública, e a API é para uma aplicação externa que já identifica seus usuários. Fechar os GETs evita raspagem anônima e carga sem dono, e deixa a regra simples de explicar: toda a API é autenticada. O site continua mostrando perguntas a anônimos porque lá o próximo passo é o login.
+- `/health` fica pública porque monitor e load balancer chamam sem credencial, e ela expõe só "no ar, banco ok, votação ligada".
 - O `_csrf_request_header_check` só é exigido quando a requisição chega com sessão (cookie). Basic Auth não tem sessão, então clientes externos não precisam de token CSRF.
 - OAuth2 é a evolução natural para produção e está documentado como próximo passo. API key com id externo transferiria para o cliente a responsabilidade de garantir unicidade, o que o PDF pede que o Drupal garanta.
 
