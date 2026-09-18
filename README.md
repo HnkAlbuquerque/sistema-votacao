@@ -6,6 +6,7 @@ Documentos complementares:
 
 - [docs/ARQUITETURA.md](docs/ARQUITETURA.md) – rastreabilidade requisito a requisito, modelo de dados, fluxo de voto, API.
 - [docs/DECISOES.md](docs/DECISOES.md) – por que cada escolha foi feita e o que foi descartado.
+- [docs/REQUISITOS.md](docs/REQUISITOS.md) – batimento de cada requisito do PDF com arquivo e linha do código.
 
 ## Stack
 
